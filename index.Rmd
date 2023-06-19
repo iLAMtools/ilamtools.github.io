@@ -4,8 +4,3 @@ author: "Jacob Dayton & Avalon Owens"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
-
-
-
-
-
