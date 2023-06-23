@@ -5,7 +5,14 @@
   
   Customizable, modular R-scripts process the consecutive images with [*imager*](https://cran.r-project.org/web/packages/imager/) and output a file containing the *number*, *size*, *location*, and *timing* of all identified movements. Output can be converted into DAM format or directly analyzed within the [*Rethomics*](https://rethomics.github.io/) *framework*. 
 
-```{r x, fig.cap='iLAM Workflow', echo=FALSE}
+```{r x, fig.cap='iLAM Workflow', echo=FALSE, fig.show='hold',fig.align='center'}
 knitr::include_graphics("images/ilam_workflow.png", error=FALSE)
 ```
+
+
+```{r v, fig.cap='Representative firefly movements identified by iLAM system',echo=FALSE, fig.show='hold',fig.align='center'}
+knitr::include_graphics("images/ilam_photinus.gif", error=FALSE)
+```
+
+
 
