@@ -1,5 +1,8 @@
 fig:x
+tab:y
+fig:z
+fig:a
 description
 flight-cage-construction
-raspberry-picamera-setup
+raspberry-pi-zero-wcamera-setup
 post-process-image-segmentation

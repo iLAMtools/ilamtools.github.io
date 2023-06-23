@@ -23,7 +23,7 @@
 <meta name="author" content="Jacob Dayton &amp; Avalon Owens" />
 
 
-<meta name="date" content="2023-06-19" />
+<meta name="date" content="2023-06-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -101,6 +101,50 @@
             <section class="normal" id="section-">
 <div id="raspberry-picamera-setup" class="section level1 hasAnchor" number="3">
 <h1><span class="header-section-number">Chapter 3</span> Raspberry Pi/Camera Setup<a href="raspberry-picamera-setup.html#raspberry-picamera-setup" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p><em>Note: [xxx] refers to the login name of the Raspberry Pi associated with the iLAM</em></p>
+<p>Folder Directory Structure:</p>
+<ul>
+<li>still_[xxx]
+<ul>
+<li><em>Photos are saved here</em></li>
+</ul></li>
+<li>script_[xxx]
+<ul>
+<li>still_[xxx].sh</li>
+<li>mount_[xxx].sh</li>
+</ul></li>
+<li>mount_[xxx].sh
+<ul>
+<li><em>If connecting Pi to a remote directory, photos will be copied from still_[xxx] and uploaded to the mount_[xxx] directory</em></li>
+</ul></li>
+</ul>
+<p><em>still_[xxx].sh</em></p>
+<pre><code>#!/bin/bash
+DATE=$(date +&quot;%m%d.%H%M&quot;)
+sudo raspistill -o /home/$USER/still_$USER/$USER.$DATE.jpg</code></pre>
+<p><em>mount_[xxx].sh</em></p>
+<pre><code>#!/bin/bash
+DATE=$(date +&quot;%m%d.%H%M&quot;)
+sleep 10s
+cp /home/$USER/still_$USER/$USER.$DATE.jpg /home/$USER/mount_$USER/</code></pre>
+<p>To change/set the schedule that scripts are run, you must modify the Pi’s user crontab file
+<em>Access the crontab file</em></p>
+<pre><code>sudo crontab -e</code></pre>
+<p><em>Copy the following to the bottom of the file</em></p>
+<pre><code>#every two minutes, this will run the still_$USER.sh script
+*/2 *  *   *   * sh /home/$USER/script_$USER/still_$USER.sh 2&gt;&amp;1
+    
+#if mounting files to a remote directory, add this line which copies (uploads) the still file from your pi to a remote database
+*/2 *  *   *   * sh /home/$USER/script_$USER/mount_$USER.sh </code></pre>
+<p><em>If raspistill will not take a picture and returns</em> <em>*</em> <em>failed to open vchiq instance</em>:</p>
+<ul>
+<li>Verify that the camera is connected and the ribbon cable is not damaged:
+<code>vcgencmd get_camera</code></li>
+<li>Determine if the camera or the still_[xxx].sh script is the issue:
+<code>raspistill -o /home/$USER/test.jpg</code></li>
+<li>Modify permissions of the camera:
+<code>sudo chmod777 /dev/vchiq</code></li>
+</ul>
 
 </div>
             </section>

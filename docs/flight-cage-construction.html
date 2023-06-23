@@ -23,7 +23,7 @@
 <meta name="author" content="Jacob Dayton &amp; Avalon Owens" />
 
 
-<meta name="date" content="2023-06-19" />
+<meta name="date" content="2023-06-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="description.html"/>
-<link rel="next" href="raspberry-picamera-setup.html"/>
+<link rel="next" href="raspberry-pi-zero-wcamera-setup.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -78,7 +78,7 @@
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="description.html"><a href="description.html"><i class="fa fa-check"></i><b>1</b> Description</a></li>
 <li class="chapter" data-level="2" data-path="flight-cage-construction.html"><a href="flight-cage-construction.html"><i class="fa fa-check"></i><b>2</b> Flight-Cage Construction</a></li>
-<li class="chapter" data-level="3" data-path="raspberry-picamera-setup.html"><a href="raspberry-picamera-setup.html"><i class="fa fa-check"></i><b>3</b> Raspberry Pi/Camera Setup</a></li>
+<li class="chapter" data-level="3" data-path="raspberry-pi-zero-wcamera-setup.html"><a href="raspberry-pi-zero-wcamera-setup.html"><i class="fa fa-check"></i><b>3</b> Raspberry Pi Zero W/Camera Setup</a></li>
 <li class="chapter" data-level="4" data-path="post-process-image-segmentation.html"><a href="post-process-image-segmentation.html"><i class="fa fa-check"></i><b>4</b> Post-Process Image Segmentation</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -101,6 +101,130 @@
             <section class="normal" id="section-">
 <div id="flight-cage-construction" class="section level1 hasAnchor" number="2">
 <h1><span class="header-section-number">Chapter 2</span> Flight-Cage Construction<a href="flight-cage-construction.html#flight-cage-construction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The paired iLAM flight-cages described in our original publication used the following materials.</p>
+<table>
+<caption><span id="tab:y">Table 2.1: </span>iLAM materials</caption>
+<colgroup>
+<col width="77%" />
+<col width="11%" />
+<col width="11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Item</th>
+<th align="left">Function</th>
+<th align="left">Units/Setup</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Black mosquito head net mesh big size, 6.69” x 3.94” x 1.38”</td>
+<td align="left">Flight-Cage</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">Wooden embroidery hoop, 14”</td>
+<td align="left">Flight-Cage</td>
+<td align="left">4</td>
+</tr>
+<tr class="odd">
+<td align="left">Wooden embroidery hoop, 8”</td>
+<td align="left">Flight-Cage</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">Hardwood plywood, 1/2” x 4’ x 8’</td>
+<td align="left">Structure</td>
+<td align="left">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">Steel threaded rod, 3/8”-16 x 2’</td>
+<td align="left">Structure</td>
+<td align="left">6</td>
+</tr>
+<tr class="even">
+<td align="left">Steel hex nut, 3/8”-16</td>
+<td align="left">Structure</td>
+<td align="left">36</td>
+</tr>
+<tr class="odd">
+<td align="left">Steel washer, 3/8”</td>
+<td align="left">Structure</td>
+<td align="left">36</td>
+</tr>
+<tr class="even">
+<td align="left">No See Um fiberglass mesh screening, 36” x 25’</td>
+<td align="left">Cover</td>
+<td align="left">0.04</td>
+</tr>
+<tr class="odd">
+<td align="left">Falcon tube, 50mL</td>
+<td align="left">Water</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">Braided cotton roll, 4”</td>
+<td align="left">Water</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">Sponge</td>
+<td align="left">Water</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">Raspberry Pi Zero W</td>
+<td align="left">Computer</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">Raspberry Pi Zero W camera module night vision w/ 3.6mm, 2pcs IR sensor LED light</td>
+<td align="left">Camera</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">SanDisk Ultra 32GB microSD card</td>
+<td align="left">Memory</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">Micro USB charging cord/block</td>
+<td align="left">Power</td>
+<td align="left">2</td>
+</tr>
+</tbody>
+</table>
+<p><em>All materials were purchased from local hardware stores, art supply chains, Raspberry Pi suppliers, and Amazon</em></p>
+<p>The three cage levels were made with the following cuts:</p>
+<ul>
+<li>Top: 31 1/2” x 10 1/2”
+<ul>
+<li>Two Circles: 13 3/8” diameter (&lt;14” hoop)</li>
+</ul></li>
+<li>Bottom: 31 1/2” x 10 1/2”
+<ul>
+<li>Two Circles: 7 1/2” diameter (&lt;8” hoop)</li>
+<li>Hole for camera ribbon</li>
+</ul></li>
+<li>Base: 31 1/2” x 10 1/2”</li>
+</ul>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:z"></span>
+<img src="images/ilam_in_triangle.jpg" alt="iLAM flight-cage: front view"  />
+<p class="caption">
+Figure 2.1: iLAM flight-cage: front view
+</p>
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:a"></span>
+<img src="images/ilam_interior.jpg" alt="iLAM flight-cage: top-down view"  />
+<p class="caption">
+Figure 2.2: iLAM flight-cage: top-down view
+</p>
+</div>
+<p><em>Tips:</em></p>
+<ul>
+<li><em>Lifespan of experimental insects increased when moist sponges and falcon tube with cotton roll and water were provided at the base of the iLAM.</em></li>
+<li><em>Duct-tape around the camera ribbon cable hole and camera limited escape by experimental insects, particularly the small fireflies!</em></li>
+</ul>
 
 </div>
             </section>
@@ -109,7 +233,7 @@
         </div>
       </div>
 <a href="description.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="raspberry-picamera-setup.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="raspberry-pi-zero-wcamera-setup.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

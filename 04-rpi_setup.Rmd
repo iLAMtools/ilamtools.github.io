@@ -1,1 +1,137 @@
-# Raspberry Pi/Camera Setup
+# Raspberry Pi Zero W/Camera Setup
+
+**1. install operating system:**
+
+  - use microSD adapter to mount SD card on laptop
+  - download and open Raspberry Pi Imager
+  - select OS → other → Raspbian Pi OS Lite
+  - replace formatted microSD card in raspberry pi
+  - connect raspberry pi to power, keyboard, monitor
+  - connect raspberry pi to power, keyboard, monitor
+  - use microHDMI to HDMI adapter for monitor
+  - use microUSB to USD adapter for keyboard
+
+**2. login with default information:**
+
+  - raspberrypi login: pi
+  - password: raspberry   
+
+**3. bring up the configuration menu:** ```sudo raspi-config```
+
+  - use arrow keys + enter to navigate
+  - 1 → S1  connect to wifi  
+    - SSID: wifi network name
+    - passphrase: wifi password
+  - 1 → S3  change pi password
+  - 1 → S4  change pi name (not login)
+  - 3 → I1  enable camera attachment
+  - 3 → I2  enable remote access (```ssh```)
+  - 5 → L2  set timezone
+  - 5 → L3  set keyboard layout 
+    - this step is only required if # key maps incorrectly
+  - Finish (type ```y``` when asked if you want to reboot)
+
+**4. add static IP address for remote access:**
+  https://raspberrypi-guide.github.io/networking/set-up-static-ip-address
+
+**5. log in remotely through terminal:**
+
+```
+ssh pi@[IP]
+password:
+```
+  
+**6. make a folder named still to hold images: **
+```mkdir still_[xxx]```
+*Note: [xxx] refers to the login name of the Raspberry Pi associated with the iLAM*
+
+**7. make a folder named script to hold scripts: **
+```mkdir script_[xxx]``` 
+  
+**8. make a script using a text-editor (e.g., nano) named still_[xxx].sh:**
+  ```sudo nano ./script_[xxx]/still_[xxx].sh```
+copy-paste or type out the following text:  
+```
+#!/bin/bash
+DATE=$(date +"%m%d.%H%M")
+sudo raspistill -o /home/$USER/still_$USER/$USER.$DATE.jpg
+```
+ - this script will take images and save them along w/ metadata: 
+  - the first line is a necessary part of any bash file with instructions  
+  - the second line is how you format the date and time in the file name  
+  - the third line actually tells the pi to take a photo and store it as such  
+  - hit ```control^X``` to exit (type ```y``` when asked if you want to save)
+
+**9. if mounting raspberry pi zero W to a remote directory, then repeat the same steps for mount_[xxx].sh:**
+```
+#!/bin/bash
+DATE=$(date +"%m%d.%H%M")
+sleep 10s
+cp /home/$USER/still_$USER/$USER.$DATE.jpg /home/$USER/mount_$USER/
+```
+
+**10. set the script to run periodically with crontab:**
+
+  - access the crontab file
+```
+sudo crontab -e
+```
+
+  - select first option to edit the crontab in nano
+  - copy the following to the bottom of the file:
+```
+*/2 *  *   *   * sh /home/$USER/script_$USER/still_$USER.sh 2>&1
+```
+  this tells the pi to execute the still.sh file every 2 minutes 
+  (the order is minute, hour, day of month, month, day of week)
+  make sure that each input is separated by at least one space 
+  when setting up a new crontab, always run it past [*crontab.guru*](https://crontab.guru/)!
+  
+  - hit ```control^X``` to exit (type y when asked if you want to save)
+  - if you are mounting to a remote directory, you will also want to add this line
+```
+#if mounting files to a remote directory, add this line which copies (uploads) the still file from your pi to a remote database
+*/2 *  *   *   * sh /home/$USER/script_$USER/mount_$USER.sh 
+```
+
+**11. copy image files from pi to laptop:**
+
+  - log in to the linux/powershell on your laptop
+  - run the following command from the computer that you want to download images onto
+  ```scp pi@[IP]:~/still_[xxx]/*.jpg ~/Desktop```
+
+**other useful commands:**
+
+  - \*				wildcard (e.g. `*.jpg` == all jpeg files)
+  - tab 			autocomplete, if code is unambiguous
+  - ```control^A``` 		bring cursor to beginning of line
+  - ```control^E```		bring cursor to end of line
+  - ```control^C```		kill process
+  - ```clear``` 			clear all previous text from terminal
+  - ```ls```  			list all contents in current folder
+  - ```cd directory_path```  	change to named folder
+  - ```cd ~```			go to home directory
+```cd ..``` 			go up one folder level
+  - ```cd -```  			go back to last folder
+  - ```mkdir dir_name```  	create EMPTY folder (directory)
+  - ```rmdir dir_name```  	remove EMPTY folder
+  - ```rm file_name```  		remove a file
+  - ```rm -f file_name```  	remove a file without asking for permission
+  - ```rm -r dir_name```  	recursively remove all files from folder
+  - ```rm -rf dir_name```  	forcefully remove all files from folder
+  - ```ren name_1 name_2``` 	rename something to something else
+  - ```cp file_1 file_2```  	copy file_1 to file_2, creates duplicate. *note*: if file_2 exists will overwrite (NO warning)
+  - ```cp -r dir_1 dir_2``` 	copy folder and its contents
+  - ```nano file_name```  	make named file and open text editor
+  - ```sudo reboot		reboot pi``` 
+  - ```sudo shutdown now```	safely shutdown pi (reboots when plugged in again)
+
+**If raspistill will not take a picture and returns** ```*failed to open vchiq instance```**:**
+  
+  - Verify that the camera is connected and the ribbon cable is not damaged:
+  ```vcgencmd get_camera```
+- Determine if the camera or the still_[xxx].sh script is the issue:
+  ```raspistill -o /home/$USER/test.jpg```
+- Modify permissions of the camera:
+  ```sudo chmod777 /dev/vchiq```
+
