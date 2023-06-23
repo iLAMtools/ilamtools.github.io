@@ -3,7 +3,7 @@
 **1. install operating system:**
 
   - use microSD adapter to mount SD card on laptop
-  - download and open Raspberry Pi Imager
+  - download and open [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
   - select OS → other → Raspbian Pi OS Lite
   - replace formatted microSD card in raspberry pi
   - connect raspberry pi to power, keyboard, monitor
@@ -37,7 +37,7 @@
 **5. log in remotely through terminal:**
 
 ```
-ssh pi@[IP]
+ssh login_name@[IP]
 password:
 ```
   

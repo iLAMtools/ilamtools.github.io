@@ -4,3 +4,7 @@ author: "Jacob Dayton & Avalon Owens"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
+
+```{r v, fig.cap='Firefly movements identified by the iLAM protocol.', echo=FALSE}
+knitr::include_graphics("images/ilam_photinus.gif", error=FALSE)
+```
