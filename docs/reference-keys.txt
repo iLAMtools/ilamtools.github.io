@@ -3,6 +3,8 @@ fig:v
 tab:y
 fig:z
 fig:a
+fig:j
+fig:k
 description
 flight-cage-construction
 raspberry-pi-zero-wcamera-setup

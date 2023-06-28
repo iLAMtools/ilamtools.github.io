@@ -1,1 +1,175 @@
 # Post-Process Image Segmentation
+
+Below is a walk-through for the post-process image segmentation (i.e., blob identification) of iLAM images 
+
+**1. Organize your file directory structure in a logical structure**
+
+  - Universal iLAM functions are within ```~/iLAM/scripts/```
+  - ```~/iLAM/exp_a/``` contains images, metadata, and analysis scripts specific to Experiment A
+  - Experiment A's images from ilam_01 and ilam_02 are saved in ```~/iLAM/exp_a/ilam_01/``` and ```~/iLAM/exp_a/ilam_02/```, respectively
+  - CSV output containing the size, location, and timing of all blobs/movements for each iLAM cages for Experiment A (i.e., ilam_01 and ilam_02):```~/iLAM/exp_a/iLAM_exp_a.txt/```, with corresponding metadata: ```~/iLAM/exp_a/metadata_exp_a.csv/```
+
+```{r, fig.cap='Directory structure for iLAM analysis', echo=FALSE}
+
+library(data.tree)
+
+path <- c(
+    "iLAM/exp_a/ilam_01/ilam01.0707.2058.jpg",
+    "iLAM/exp_a/ilam_01/ilam01.0707.2100.jpg",
+    
+    "iLAM/exp_a/ilam_02/ilam02.0707.2058.jpg",
+    "iLAM/exp_a/ilam_02/ilam02.0707.2100.jpg",
+    
+    "iLAM/exp_a/scripts/analyze_experiment.R",
+    "iLAM/exp_a/scripts/exp_a_ilam01.R",
+    "iLAM/exp_a/scripts/exp_a_ilam02.R",
+
+    "iLAM/exp_a/scripts/run_exp_a_ilam01.sh",
+    "iLAM/exp_a/scripts/run_exp_a_ilam02.sh",
+
+    "iLAM/exp_a/metadata_exp_a.csv",
+    "iLAM/exp_a/iLAM_exp_a.txt",
+    
+    "iLAM/exp_b/ilam_01/",
+    "iLAM/exp_b/ilam_02/",
+    "iLAM/exp_b/scripts/",
+    
+    "iLAM/scripts/find_movements.R",
+    "iLAM/scripts/find_threshold.R", 
+    "iLAM/scripts/make_dam_file.R", 
+    "iLAM/scripts/make_gif.R", 
+    "iLAM/scripts/parse_movements.R", 
+    "iLAM/scripts/plot_movements.R"
+)
+
+mytree <- data.tree::as.Node(data.frame(pathString = path))
+print(mytree)
+```
+
+2. **Perform image segmentation for images taken from each iLAM (*exp_a_ilam01.R*, *exp_a_ilam02.R, etc.)**
+
+  - Load required packages and iLAM functions
+```
+ library(imager)
+ library(tidyverse)
+ library(reshape2)
+ library(dplyr)
+ library(plyr)
+ library(lubridate)
+ library(readr)
+ library(stringr)
+ library(plotrix)
+
+setwd("/~/iLAM/exp_a/")
+
+ #read in iLAM functions
+ for (f in list.files("../scripts", pattern="*.R",
+                      full.names = TRUE)) {
+   source(f)
+
+```
+
+  - Change values for every cage and experiment: crop (x_left, x_right, etc.), settings for image segmentation (blur, threshold, clean), species characters (genus, species, color)
+```
+pi_sub_folder <- "ilam01"
+sex <- "male" #cage/project-specific
+
+#Crop-settings
+x_left <- 425 #cage-specific, depending on camera arrangement
+x_right <- 2225 #cage-specific, depending on camera arrangement
+y_bot <- 100 #cage-specific, depending on camera arrangement
+y_top <- 1700 #cage-specific, depending on camera arrangement
+
+#change following values for every experiment
+out_file_name = "iLAM_exp_a" #project-specific
+n_thr = 0.999 #species-specific, depending on IR reflectance/contrast with background
+n_cln = 10 #species-specific, depending on IR reflectance
+n_max = 75000 #species-specific, pixel differences above this value will be considered as noise
+start_photophase = 5 #project-specific, time that lights turn on
+end_photophase = 21 #project-specific, time that dark starts
+genus = "photinus" #project-specific
+species = "marginellus" #project-specific
+animal = "black" #project-specific, during the night, does the animal appear "white" on a dark background or "black" on a light background? This is VERY important (!) because it determines whether "movements" identify insects whom left vs. arrived between frames 
+###
+```
+
+  - Create a vector of .jpg image file names to be analyzed
+```
+file_names <- list.files(pi_sub_folder,
+                         pattern= "*.jpg",
+                         full.names = TRUE)
+```
+
+*Note: If you do not know which values to use for cropping (x_left, x_right, y_bot, y_top), you can test with this command. Historically, we identify crop setting that a) remove the outer edge of the cage and to center the ceiling and b) keep the picture area constant across all iLAMs (e.g., 1800x1600 pixels)*
+
+``` 
+load.image(file_names[1]) %>%
+imsub(x %inr% c(x_left,x_right), y %inr% c(y_bot,y_top)) %>% plot()
+```
+
+  - Find all movements by image subtraction, global thresholding, and blob detection in the iLAM wrapper function ```find_movements()```
+```
+out <- find_movements(files = file_names, # list of file names 
+                      n_thr = n_thr,      # threshold value (0.992 == "0.8%")
+                      n_cln = n_cln,      # value for cleaning (number of pixels)
+                      n_grw = 1.5,      # multiplier for n_cln (shrink vs. grow)
+                      n_blr = 3,          # let user select blur radius
+                      n_max = 75000,      # upper cut-off for # pixel differences
+                      x_left = x_left,    # value for crop on x min
+                      x_right = x_right,  # value for crop on x max
+                      y_bot = y_bot,      # value for crop on y min
+                      y_top = y_top,      # value for crop on y max
+                      find_thr = T, # T or F
+                      type_thr = "absolute",
+                      p_sample = 0.05,    # If 5% of the total images < 100, then increase this value
+                      channel = "grayscale",
+                      animal = animal)
+```
+
+  - Update and save output containing all identified blobs, their size and location as a .csv in the current working directory. **Important: Even under optimal setting, sometimes there are "noisy" timepoints when blobs cannot easily be identified after subtracting two consecutive images. In these instances, 2,000,000 is assigned to the .csv for subsequent filtering and removal**
+
+```
+#adds additional columns to dataframe
+out$ID <- paste0(n_thr*100,"%_", "s", n_cln, "g", 1.5*n_cln)
+out$sex <- sex
+out$genus <- genus
+out$species <- species
+
+if (file.exists(paste0(out_file_name,".csv"))){
+  write.table(out, file = paste0(out_file_name,".csv"),
+              append = TRUE, quote = TRUE, sep = ",",
+              row.names = FALSE, col.names = FALSE)
+} else{
+  write.csv(out, file = paste0(out_file_name,".csv"),
+            col.names = TRUE, row.names = FALSE)
+  
+}
+rm(out)
+```
+
+  - Use ```plot_movements()``` to visualize movements by plotting detected blobs onto a subset of images
+```
+#circles in bottom left corner denote standards of sizes: 12.8k px, 3.2k px, 800 px, 200 px, 50 px
+plot_movements(pi_sub_folder,
+               by_change,
+               x_left, x_right,
+               y_bot, y_top)
+```
+```{r j, fig.cap='iLAM plot_movements() image', echo=FALSE, fig.show='hold',fig.align='center'}
+knitr::include_graphics("images/ilam_plot_movement.jpg")
+```
+
+  - If desired, make a gif from plotted images with  ```make_gif() ```
+ 
+```
+make_gif(out_file_name,
+          pi_sub_folder)
+```
+
+```{r k, fig.cap='iLAM make_gif() output', echo=FALSE, fig.show='hold',fig.align='center'}
+knitr::include_graphics("images/ilam_photinus.gif")
+```
+
+*Note: For more details/customization, look "under-the-hood" at the ```find_movements()``` and ```find_threshold()``` functions* 
+
+**iLAM scripts can be cloned and downloaded from [insert link]**
