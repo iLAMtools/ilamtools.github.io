@@ -114,6 +114,83 @@ end_photophase = 21 #project-specific, time that dark starts
 by_change_Pg &lt;- parse_movements(file_mvmnts = paste0(out_file_name,&quot;.csv&quot;),
                              start_photophase = start_photophase,
                              end_photophase = end_photophase)</code></pre>
+<table style="width:100%;">
+<caption><span id="tab:q">Table 5.1: </span>iLAM by_change data frame</caption>
+<colgroup>
+<col width="11%" />
+<col width="7%" />
+<col width="5%" />
+<col width="26%" />
+<col width="18%" />
+<col width="7%" />
+<col width="12%" />
+<col width="11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">s</th>
+<th align="right">x</th>
+<th align="right">y</th>
+<th align="left">d</th>
+<th align="left">ID</th>
+<th align="left">sex</th>
+<th align="left">genus</th>
+<th align="left">species</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2000000</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">mothra03.0624.2100</td>
+<td align="left">99.9%_s10g15</td>
+<td align="left">male</td>
+<td align="left">photinus</td>
+<td align="left">greeni</td>
+</tr>
+<tr class="even">
+<td align="right">2799</td>
+<td align="right">1256</td>
+<td align="right">35</td>
+<td align="left">mothra03.0624.2102</td>
+<td align="left">99.9%_s10g15</td>
+<td align="left">male</td>
+<td align="left">photinus</td>
+<td align="left">greeni</td>
+</tr>
+<tr class="odd">
+<td align="right">2189</td>
+<td align="right">150</td>
+<td align="right">466</td>
+<td align="left">mothra03.0624.2102</td>
+<td align="left">99.9%_s10g15</td>
+<td align="left">male</td>
+<td align="left">photinus</td>
+<td align="left">greeni</td>
+</tr>
+<tr class="even">
+<td align="right">731</td>
+<td align="right">1282</td>
+<td align="right">40</td>
+<td align="left">mothra03.0624.2104</td>
+<td align="left">99.9%_s10g15</td>
+<td align="left">male</td>
+<td align="left">photinus</td>
+<td align="left">greeni</td>
+</tr>
+<tr class="odd">
+<td align="right">442</td>
+<td align="right">1311</td>
+<td align="right">51</td>
+<td align="left">mothra03.0624.2104</td>
+<td align="left">99.9%_s10g15</td>
+<td align="left">male</td>
+<td align="left">photinus</td>
+<td align="left">greeni</td>
+</tr>
+</tbody>
+</table>
 <ol start="2" style="list-style-type: decimal">
 <li>Collapse all identified blobs (within by_change_[]) into a summarized dataframe containing the sum of blobs and number of blobs/movements observed per analyzed frame/timepoints (by_frame_[])</li>
 </ol>
@@ -146,7 +223,7 @@ by_frame_Pg &lt;-
 dplyr::filter(by_frame_Pg, n&gt;0) %&gt;% group_by(pi) %&gt;%
   summarise(blob_size = mean((s/n), na.rm=TRUE)) #output the average blob size</code></pre>
 <table>
-<caption><span id="tab:o">Table 5.1: </span>iLAM by_frame data frame</caption>
+<caption><span id="tab:o">Table 5.2: </span>iLAM by_frame data frame</caption>
 <colgroup>
 <col width="7%" />
 <col width="13%" />
@@ -225,7 +302,7 @@ write_tsv(ilam_Pg, &quot;ilam_Pg.tsv&quot;, col_names = F)
 write_tsv(ilam_Pg, &quot;Monitor42.txt&quot;, col_names = F) #some analysis programs require Monitor##.txt name
 </code></pre>
 <table>
-<caption><span id="tab:n">Table 5.2: </span>iLAM by_frame converted to DAM format</caption>
+<caption><span id="tab:n">Table 5.3: </span>iLAM by_frame converted to DAM format</caption>
 <colgroup>
 <col width="1%" />
 <col width="5%" />
@@ -554,7 +631,7 @@ write_tsv(ilam_Pg, &quot;ilam_Pg_n.tsv&quot;, col_names = F)
 write_tsv(ilam_Pg, &quot;Monitor43.txt&quot;, col_names = F) #some analysis programs require Monitor##.txt name
 </code></pre>
 <table>
-<caption><span id="tab:p">Table 5.3: </span>iLAM by_frame converted to DAM format</caption>
+<caption><span id="tab:p">Table 5.4: </span>iLAM by_frame converted to DAM format</caption>
 <colgroup>
 <col width="1%" />
 <col width="5%" />

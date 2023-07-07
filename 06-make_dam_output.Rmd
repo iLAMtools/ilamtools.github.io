@@ -11,6 +11,18 @@ by_change_Pg <- parse_movements(file_mvmnts = paste0(out_file_name,".csv"),
                              start_photophase = start_photophase,
                              end_photophase = end_photophase)
 ```
+```{r q, fig.cap='iLAM by_change output', echo=FALSE, message=FALSE}
+library(knitr)
+library(readr)
+
+example_by_change <- read_csv("data/Pgreeni.csv")[1:5,]
+
+knitr::kable(example_by_change, error=FALSE, caption = "iLAM by_change data frame")
+
+```
+
+
+
 
 2. Collapse all identified blobs (within by_change_[]) into a summarized dataframe containing the sum of blobs and number of blobs/movements observed per analyzed frame/timepoints (by_frame_[])
 ```
