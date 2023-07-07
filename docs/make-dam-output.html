@@ -23,7 +23,7 @@
 <meta name="author" content="Jacob Dayton &amp; Avalon Owens" />
 
 
-<meta name="date" content="2023-06-29" />
+<meta name="date" content="2023-07-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -103,6 +103,771 @@
             <section class="normal" id="section-">
 <div id="make-dam-output" class="section level1 hasAnchor" number="5">
 <h1><span class="header-section-number">Chapter 5</span> Make DAM Output<a href="make-dam-output.html#make-dam-output" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<ol style="list-style-type: decimal">
+<li>Read in iLAM output from image_analysis and parse into a dataframe containing the size, centroid location, and origin (time, pi) of all identified blobs (by_change)</li>
+</ol>
+<pre><code>out_file_name = &quot;Pgreeni&quot;
+start_photophase = 5 #project-specific, time that lights turn on
+end_photophase = 21 #project-specific, time that dark starts
+
+#parse movements into workable dfs: all movements (by_change) and
+by_change_Pg &lt;- parse_movements(file_mvmnts = paste0(out_file_name,&quot;.csv&quot;),
+                             start_photophase = start_photophase,
+                             end_photophase = end_photophase)</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Collapse all identified blobs (within by_change_[]) into a summarized dataframe containing the sum of blobs and number of blobs/movements observed per analyzed frame/timepoints (by_frame_[])</li>
+</ol>
+<pre><code>by_frame_Pg &lt;- 
+  by_change_Pg %&gt;% ungroup() %&gt;% 
+  group_by(pi, ID, time, treatment) %&gt;%
+  summarize(n = length(s[!is.na(s)]), #number of blobs of size (s) != NA
+            s = sum(s, na.rm = TRUE)) %&gt;% #sum of blob sizes, NA removed
+  mutate(n = ifelse(s == 0, 0, n)) %&gt;% #if sum of blobs=0, then n&lt;-0 (otherwise it&#39;d be 1)
+  distinct(pi, ID, time, treatment, n, s) #sanity check to remove any duplicates
+</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Noisy values were initially assigned an absurd value (2,000,000). This step changes 2,000,000 with NA and then replaces with average value of the preceding and succeeding timepoints</li>
+</ol>
+<pre><code>by_frame_Pg &lt;-
+  by_frame_Pg %&gt;% ungroup() %&gt;%
+   mutate(s = replace(s, s==2000000, NA),
+          n = replace(n, is.na(s), NA))
+
+by_frame_Pg &lt;-
+  by_frame_Pg %&gt;% group_by(pi) %&gt;%
+  mutate(s = round((na.locf0(s, fromLast = TRUE) + na.locf0(s, fromLast = FALSE))/2,0),
+         n = round((na.locf0(n, fromLast = TRUE) + na.locf0(n, fromLast = FALSE))/2,0)) %&gt;% ungroup()
+
+by_frame_Pg &lt;-
+  by_frame_Pg %&gt;% ungroup() %&gt;%
+   mutate(s = replace(s, is.na(s), 0),
+          n = replace(n, is.na(n), 0))
+
+dplyr::filter(by_frame_Pg, n&gt;0) %&gt;% group_by(pi) %&gt;%
+  summarise(blob_size = mean((s/n), na.rm=TRUE)) #output the average blob size</code></pre>
+<table>
+<caption><span id="tab:o">Table 5.1: </span>iLAM by_frame data frame</caption>
+<colgroup>
+<col width="7%" />
+<col width="13%" />
+<col width="19%" />
+<col width="30%" />
+<col width="15%" />
+<col width="4%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">…1</th>
+<th align="left">pi</th>
+<th align="left">ID</th>
+<th align="left">time</th>
+<th align="left">treatment</th>
+<th align="right">n</th>
+<th align="right">s</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">mothra01</td>
+<td align="left">99.9%_s10g15</td>
+<td align="left">2022-06-24 21:00:00</td>
+<td align="left">D</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">mothra01</td>
+<td align="left">99.9%_s10g15</td>
+<td align="left">2022-06-24 21:02:00</td>
+<td align="left">D</td>
+<td align="right">4</td>
+<td align="right">4084</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">mothra01</td>
+<td align="left">99.9%_s10g15</td>
+<td align="left">2022-06-24 21:04:00</td>
+<td align="left">D</td>
+<td align="right">2</td>
+<td align="right">2684</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left">mothra01</td>
+<td align="left">99.9%_s10g15</td>
+<td align="left">2022-06-24 21:06:00</td>
+<td align="left">D</td>
+<td align="right">5</td>
+<td align="right">8803</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">mothra01</td>
+<td align="left">99.9%_s10g15</td>
+<td align="left">2022-06-24 21:08:00</td>
+<td align="left">D</td>
+<td align="right">9</td>
+<td align="right">18515</td>
+</tr>
+</tbody>
+</table>
+<ol start="4" style="list-style-type: decimal">
+<li>Use iLAM wrapper function make_dam_file to convert by_frame_[] into a DAM-like output and save as a DAM file with summed blob sizes/timepoint</li>
+</ol>
+<pre><code>ilam_Pg = make_dam_file(by_frame_Pg, variable_name = &quot;s&quot;) 
+
+#output a tab-delimited file containing 
+write_tsv(ilam_Pg, &quot;ilam_Pg.tsv&quot;, col_names = F)
+write_tsv(ilam_Pg, &quot;Monitor42.txt&quot;, col_names = F) #some analysis programs require Monitor##.txt name
+</code></pre>
+<table>
+<caption><span id="tab:n">Table 5.2: </span>iLAM by_frame converted to DAM format</caption>
+<colgroup>
+<col width="1%" />
+<col width="5%" />
+<col width="5%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="2%" />
+<col width="3%" />
+<col width="3%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">X1</th>
+<th align="left">X2</th>
+<th align="left">X3</th>
+<th align="right">X4</th>
+<th align="right">X5</th>
+<th align="right">X6</th>
+<th align="right">X7</th>
+<th align="left">X8</th>
+<th align="right">X9</th>
+<th align="right">X10</th>
+<th align="right">X11</th>
+<th align="right">X12</th>
+<th align="right">X13</th>
+<th align="right">X14</th>
+<th align="right">X15</th>
+<th align="right">X16</th>
+<th align="right">X17</th>
+<th align="right">X18</th>
+<th align="right">X19</th>
+<th align="right">X20</th>
+<th align="right">X21</th>
+<th align="right">X22</th>
+<th align="right">X23</th>
+<th align="right">X24</th>
+<th align="right">X25</th>
+<th align="right">X26</th>
+<th align="right">X27</th>
+<th align="right">X28</th>
+<th align="right">X29</th>
+<th align="right">X30</th>
+<th align="right">X31</th>
+<th align="right">X32</th>
+<th align="right">X33</th>
+<th align="right">X34</th>
+<th align="right">X35</th>
+<th align="right">X36</th>
+<th align="right">X37</th>
+<th align="right">X38</th>
+<th align="right">X39</th>
+<th align="right">X40</th>
+<th align="right">X41</th>
+<th align="right">X42</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">24 Jun 22</td>
+<td align="left">21:00:00</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">42</td>
+<td align="right">0</td>
+<td align="left">Ct</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">24 Jun 22</td>
+<td align="left">21:02:00</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">42</td>
+<td align="right">0</td>
+<td align="left">Ct</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">4084</td>
+<td align="right">1668</td>
+<td align="right">4988</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">24 Jun 22</td>
+<td align="left">21:04:00</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">42</td>
+<td align="right">0</td>
+<td align="left">Ct</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">2684</td>
+<td align="right">2981</td>
+<td align="right">3666</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left">24 Jun 22</td>
+<td align="left">21:06:00</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">42</td>
+<td align="right">0</td>
+<td align="left">Ct</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">8803</td>
+<td align="right">22280</td>
+<td align="right">4058</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">24 Jun 22</td>
+<td align="left">21:08:00</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">42</td>
+<td align="right">0</td>
+<td align="left">Ct</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">18515</td>
+<td align="right">17325</td>
+<td align="right">5093</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<ol start="5" style="list-style-type: decimal">
+<li>Use iLAM wrapper function make_dam_file to convert by_frame_[] into a DAM-like output and save as a DAM file with the number of blobs/timepoint</li>
+</ol>
+<pre><code>#parse movements into workable dfs: all movements (by_change) and
+by_change_Pg &lt;- parse_movements(file_mvmnts = paste0(out_file_name,&quot;.csv&quot;),
+                                start_photophase = start_photophase,
+                                end_photophase = end_photophase)
+
+by_frame_Pg = filter_nblobs(by_change_Pg) #filter out small nblobs using iLAM wrapper filter_nblobs()
+ilam_Pg = make_dam_file(by_frame_Pg, variable_name = &quot;n&quot;)
+
+write_tsv(ilam_Pg, &quot;ilam_Pg_n.tsv&quot;, col_names = F)
+write_tsv(ilam_Pg, &quot;Monitor43.txt&quot;, col_names = F) #some analysis programs require Monitor##.txt name
+</code></pre>
+<table>
+<caption><span id="tab:p">Table 5.3: </span>iLAM by_frame converted to DAM format</caption>
+<colgroup>
+<col width="1%" />
+<col width="5%" />
+<col width="5%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">X1</th>
+<th align="left">X2</th>
+<th align="left">X3</th>
+<th align="right">X4</th>
+<th align="right">X5</th>
+<th align="right">X6</th>
+<th align="right">X7</th>
+<th align="left">X8</th>
+<th align="right">X9</th>
+<th align="right">X10</th>
+<th align="right">X11</th>
+<th align="right">X12</th>
+<th align="right">X13</th>
+<th align="right">X14</th>
+<th align="right">X15</th>
+<th align="right">X16</th>
+<th align="right">X17</th>
+<th align="right">X18</th>
+<th align="right">X19</th>
+<th align="right">X20</th>
+<th align="right">X21</th>
+<th align="right">X22</th>
+<th align="right">X23</th>
+<th align="right">X24</th>
+<th align="right">X25</th>
+<th align="right">X26</th>
+<th align="right">X27</th>
+<th align="right">X28</th>
+<th align="right">X29</th>
+<th align="right">X30</th>
+<th align="right">X31</th>
+<th align="right">X32</th>
+<th align="right">X33</th>
+<th align="right">X34</th>
+<th align="right">X35</th>
+<th align="right">X36</th>
+<th align="right">X37</th>
+<th align="right">X38</th>
+<th align="right">X39</th>
+<th align="right">X40</th>
+<th align="right">X41</th>
+<th align="right">X42</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">24 Jun 22</td>
+<td align="left">21:00:00</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">42</td>
+<td align="right">0</td>
+<td align="left">Ct</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">24 Jun 22</td>
+<td align="left">21:02:00</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">42</td>
+<td align="right">0</td>
+<td align="left">Ct</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">24 Jun 22</td>
+<td align="left">21:04:00</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">42</td>
+<td align="right">0</td>
+<td align="left">Ct</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left">24 Jun 22</td>
+<td align="left">21:06:00</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">42</td>
+<td align="right">0</td>
+<td align="left">Ct</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">5</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">24 Jun 22</td>
+<td align="left">21:08:00</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">42</td>
+<td align="right">0</td>
+<td align="left">Ct</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">8</td>
+<td align="right">6</td>
+<td align="right">4</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
 
 </div>
             </section>

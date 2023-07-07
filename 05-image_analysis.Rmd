@@ -46,7 +46,7 @@ mytree <- data.tree::as.Node(data.frame(pathString = path))
 print(mytree)
 ```
 
-2. **Perform image segmentation for images taken from each iLAM (*exp_a_ilam01.R*, *exp_a_ilam02.R, etc.)**
+**2. Perform image segmentation for images taken from each iLAM (exp_a_ilam01.R, exp_a_ilam02.R, etc.)**
 
   - Load required packages and iLAM functions
 ```
