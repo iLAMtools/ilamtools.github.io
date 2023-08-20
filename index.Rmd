@@ -8,7 +8,6 @@ biblio-style: apalike
 link-citations: yes
 github-repo: ilam/daytonjn.github.io/
 description: "This is the documentation for the iLAM project, a monitor to quantify diel and circadian insect activity"
-
 ---
 
 # Description
