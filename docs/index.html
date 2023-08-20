@@ -23,7 +23,7 @@
 <meta name="author" content="Jacob Dayton &amp; Avalon Owens" />
 
 
-<meta name="date" content="2023-06-19" />
+<meta name="date" content="2023-08-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 
-<link rel="next" href="description.html"/>
+<link rel="next" href="flight-cage-construction.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -73,13 +73,15 @@
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">ilam</a></li>
+<li><a href="./">iLAM</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="description.html"><a href="description.html"><i class="fa fa-check"></i><b>1</b> Description</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Description</a></li>
 <li class="chapter" data-level="2" data-path="flight-cage-construction.html"><a href="flight-cage-construction.html"><i class="fa fa-check"></i><b>2</b> Flight-Cage Construction</a></li>
-<li class="chapter" data-level="3" data-path="raspberry-picamera-setup.html"><a href="raspberry-picamera-setup.html"><i class="fa fa-check"></i><b>3</b> Raspberry Pi/Camera Setup</a></li>
+<li class="chapter" data-level="3" data-path="raspberry-pi-zero-wcamera-setup.html"><a href="raspberry-pi-zero-wcamera-setup.html"><i class="fa fa-check"></i><b>3</b> Raspberry Pi Zero W/Camera Setup</a></li>
 <li class="chapter" data-level="4" data-path="post-process-image-segmentation.html"><a href="post-process-image-segmentation.html"><i class="fa fa-check"></i><b>4</b> Post-Process Image Segmentation</a></li>
+<li class="chapter" data-level="5" data-path="make-dam-output.html"><a href="make-dam-output.html"><i class="fa fa-check"></i><b>5</b> Make DAM Output</a></li>
+<li class="chapter" data-level="6" data-path="analyze-output.html"><a href="analyze-output.html"><i class="fa fa-check"></i><b>6</b> Analyze Output</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -102,10 +104,35 @@
 <div id="header">
 <h1 class="title">iLAM: imaging Locomotor Activity Monitor</h1>
 <p class="author"><em>Jacob Dayton &amp; Avalon Owens</em></p>
-<p class="date"><em>2023-06-19</em></p>
+<p class="date"><em>2023-08-20</em></p>
 </div>
+<div id="description" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">1</span> Description<a href="index.html#description" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Historically, most insect chronoecological research uses direct observations, cameras, and/or infrared beam-based monitors to quantify movement across timed intervals. Although many systems are cheaper than the traditional infrared locomotor activity monitors (e.g., DAM/LAM), these options remain complicated to build and/or computationally intensive.</p>
+<p>We developed the <strong>imaging Locomotor Activity Monitor (iLAM)</strong>, an affordable system for activity tracking. The iLAM utilizes a <a href="https://www.raspberrypi.com/products/raspberry-pi-zero-w/">Raspberry Pi Zero W</a> computer and night-vision camera inside a flight cage to regularly photograph a population of insects at user-defined intervals.</p>
+<p>Customizable, modular R-scripts process the consecutive images with <a href="https://cran.r-project.org/web/packages/imager/"><em>imager</em></a> and output a file containing the <em>number</em>, <em>size</em>, <em>location</em>, and <em>timing</em> of all identified movements. Output can be converted into DAM format or directly analyzed within the <a href="https://rethomics.github.io/"><em>Rethomics</em></a> <em>framework</em>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:x"></span>
+<img src="images/ilam_workflow.png" alt="iLAM Workflow"  />
+<p class="caption">
+Figure 1.1: iLAM Workflow
+</p>
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:v"></span>
+<img src="images/ilam_photinus.gif" alt="Representative firefly movements identified by iLAM system"  />
+<p class="caption">
+Figure 1.2: Representative firefly movements identified by iLAM system
+</p>
+</div>
+<p>This documentation provides instructions for (1) iLAM construction, (2) Raspberry Pi setup, (3) Image analysis in R, (4) Conversion of iLAM output to DAM format in R, and (5) Example results from Rethomics.</p>
 
-<a href="description.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="flight-cage-construction.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -136,7 +163,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/daytonJA/ilam/edit/main/index.Rmd",
+"link": "https://github.com/daytonjn/ilam/edit/main/index.Rmd",
 "text": "Edit"
 },
 "history": {
@@ -144,7 +171,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/daytonJA/ilam/blob/main/index.Rmd",
+"link": "https://github.com/daytonjn/ilam/blob/main/index.Rmd",
 "text": null
 },
 "download": null,

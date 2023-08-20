@@ -135,3 +135,4 @@ sudo crontab -e
 - Modify permissions of the camera:
   ```sudo chmod777 /dev/vchiq```
 
+A Linux reader is required to read the Raspian imaged SD card, when plugged into a Windows PC. [Linux Reader](https://www.diskinternals.com/linux-reader/) is a free option. Instructions can be found [here](https://raspberrytips.com/read-raspberry-pi-sd-card-windows/).
