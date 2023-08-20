@@ -1,5 +1,5 @@
 # Flight-Cage Construction
-  The paired iLAM flight-cages described in our original publication used the following materials.
+  The paired iLAM flight-cages described in our original publication used the following materials:
   
 ```{r y, fig.cap='iLAM Materials', echo=FALSE}
 library(knitr)
@@ -11,7 +11,6 @@ materials_ilam <- read_csv("data/materials_ilam.csv",
 knitr::kable(materials_ilam, error=FALSE, caption = "iLAM materials")
 
 ```
-
 *All materials were purchased from local hardware stores, art supply chains, Raspberry Pi suppliers, and Amazon*
 
   The three cage levels were made with the following cuts:
@@ -23,17 +22,15 @@ knitr::kable(materials_ilam, error=FALSE, caption = "iLAM materials")
     - Hole for camera ribbon
 - Base: 31 1/2" x 10 1/2"
 
-```{r z, fig.cap='iLAM flight-cage: front view', echo=FALSE, fig.show='hold',fig.align='center'}
+```{r z, fig.cap='iLAM flight-cage: front view', echo=FALSE, fig.show='hold',fig.align='left'}
 knitr::include_graphics("images/ilam_in_triangle.jpg")
 ```
 
 
-```{r a, fig.cap='iLAM flight-cage: top-down view', echo=FALSE, fig.show='hold',fig.align='center'}
+```{r a, fig.cap='iLAM flight-cage: top-down view', echo=FALSE, fig.show='hold',fig.align='left'}
 knitr::include_graphics("images/ilam_interior.jpg")
 ```
 
-  *Tips:*
-
-- *Lifespan of experimental insects increased when moist sponges and falcon tube with cotton roll and water were provided at the base of the iLAM* 
-- *Duct-tape around the camera ribbon cable hole and camera limited escape by experimental insects, particularly the small fireflies (!)*
-
+  Tips:
+- Lifespan of experimental insects increased when moist sponges and falcon tube with cotton roll and water were provided at the base of the iLAM 
+- Duct-tape around the camera ribbon cable hole and camera prevented escape by small experimental insects (e.g., *Photinus* species)

@@ -3,8 +3,13 @@ title: "iLAM: imaging Locomotor Activity Monitor"
 author: "Jacob Dayton & Avalon Owens"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
----
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: ilam/daytonjn.github.io/
+description: "This is the documentation for the iLAM project, a monitor to quantify diel and circadian insect activity"
 
+---
 
 # Description
   Historically, most insect chronoecological research uses direct observations, cameras, and/or infrared beam-based monitors to quantify movement across timed intervals. Although many systems are cheaper than the traditional infrared locomotor activity monitors (e.g., DAM/LAM), these options remain complicated to build and/or computationally intensive.  
