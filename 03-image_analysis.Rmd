@@ -46,7 +46,12 @@ mytree <- data.tree::as.Node(data.frame(pathString = path))
 print(mytree)
 ```
 
-**2. Perform image segmentation for images taken from each iLAM (exp_a_ilam01.R, exp_a_ilam02.R, etc.)**
+**2. Perform image segmentation to identify movements across images taken by each iLAM (exp_a_ilam01.R, exp_a_ilam02.R, etc.)**
+
+
+```{r bb, fig.cap='Image segmentation workflow', echo=FALSE, fig.show='hold',fig.align='left'}
+knitr::include_graphics("images/segmentation_workflow.png")
+```
 
   - Load required packages and iLAM functions
 ```
@@ -70,12 +75,13 @@ setwd("/~/iLAM/exp_a/")
 ```
 
   - Update values for every cage and/or experiment:
-    - Cage-Specific: Imaging cropping coordinates (x_left, x_right, y_bot, y_top)
+    - Cage-Specific: Integer coordinates for image cropping (x_left, x_right, y_bot, y_top)
     - Experiment-Specific:
-      - n_thr: Threshold percentile; higher values indicate a more stringent filtering. e.g., at n_thr=0.999, only the darkest pixel differences > 99.9% will be retained for segmentation 
-      - n_cln: Value to clean up pixels; e.g., at n_cln = 5, this first "shrinks" to remove all isolated blobs smaller than 5 pixels large, and then grows remaining globs by 5 pixels to aggregate nearby blobs with eachother. See [imager documentation](https://asgr.github.io/imager/morphology.html) for more details. 
-      - Species Characters: genus, species, color
-      - 
+      - n_thr: Numeric threshold percentile; higher values indicate a more stringent filtering. e.g., at n_thr=0.999, only the darkest pixel differences > 99.9% will be retained for segmentation 
+      - n_cln: Integer value to clean up pixels; e.g., at n_cln = 5, this first "shrinks" to remove all isolated blobs smaller than 5 pixels large, and then grows remaining globs by 5 pixels to aggregate nearby blobs with eachother. See [imager documentation](https://asgr.github.io/imager/morphology.html) for more details. 
+      - genus: Character string for study organis,m
+      - species: Character string for study organism
+      - color: Character string to indicate whether the study organism appears "white" or "black" on the background 
 ```
 pi_sub_folder <- "ilam01"
 sex <- "male" #cage/project-specific
