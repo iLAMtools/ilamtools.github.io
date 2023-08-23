@@ -1,6 +1,6 @@
 # Make DAM Output
 
-1. Read in iLAM output from image_analysis and parse into a dataframe containing the size, centroid location, and origin (time, pi) of all identified blobs (by_change)
+1. Read in iLAM output from image_analysis and parse into a dataframe containing the size, centroid location, and origin (time, pi) of all identified blobs (by_change) with ```parse_movements()```
 ```
 out_file_name = "Pgreeni"
 start_photophase = 5 #project-specific, time that lights turn on
@@ -22,7 +22,7 @@ knitr::kable(example_by_change, error=FALSE, caption = "iLAM by_change data fram
 ```
 
 
-2. Collapse all identified blobs (within by_change_[]) into a summarized dataframe containing the sum of blobs and number of blobs/movements observed per analyzed frame/timepoints (by_frame_[])
+2. Collapse all identified blobs (within by_change_[]) into a dataframe containing the sum of blobs and number of blobs/movements observed per frame/timepoint (by_frame_[])
 ```
 by_frame_Pg <- 
   by_change_Pg %>% ungroup() %>% 
@@ -36,7 +36,7 @@ by_frame_Pg <-
 
 3. Filter movements captured from rare, noisy images.
 
-  - Noisy values were initially assigned an arbitrary value (2,000,000). This step changes 2,000,000 with NA and then replaces with average value of the preceding and succeeding time points. These rare cases typically only occur at the image following a light-dark transition. For example, across a 7-day experiment (5040 images), only 0.4% image comparisons were assigned an arbitrary value. 
+  - Noisy values were initially assigned an arbitrary value (2,000,000) by ```find_movements()```. This step changes 2,000,000 with NA and then replaces with average value of the preceding and succeeding time points. These rare cases typically only occur at the image following a light-dark transition. For example, across a 7-day experiment (5040 images), only 0.4% image comparisons were assigned an arbitrary value. 
 
 ```
 by_frame_Pg <-
@@ -69,7 +69,7 @@ knitr::kable(example_by_frame, error=FALSE, caption = "iLAM by_frame data frame"
 ```
 
 
-4. Use iLAM wrapper function make_dam_file to convert by_frame_[] into a DAM-like output and save as a DAM file with summed blob sizes/timepoint
+4. Use iLAM wrapper ```make_dam_file()``` to convert by_frame_[] into a DAM-like output and save as a DAM file with summed blob sizes/timepoint
 ```
 ilam_Pg = make_dam_file(by_frame_Pg, variable_name = "s") 
 
@@ -89,7 +89,7 @@ knitr::kable(example_DAM_s, error=FALSE, caption = "iLAM by_frame converted to D
 ```
 
 
-5. Use iLAM wrapper function make_dam_file to convert by_frame_[] into a DAM-like output and save as a DAM file with the number of blobs/timepoint
+5. Use iLAM wrapper  ```make_dam_file()``` to convert by_frame_[] into a DAM-like output and save as a DAM file with the number of blobs/timepoint
 ```
 #parse movements into workable dfs: all movements (by_change) and
 by_change_Pg <- parse_movements(file_mvmnts = paste0(out_file_name,".csv"),

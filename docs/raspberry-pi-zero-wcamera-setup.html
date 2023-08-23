@@ -217,7 +217,18 @@ sudo raspistill -o /home/$USER/still_$USER/$USER.$DATE.jpg</code></pre>
 <li>Run the following command from the computer that you want to download images onto
 <code>scp pi@[IP]:~/still_[xxx]/*.jpg ~/Desktop</code></li>
 </ul>
-<p><strong>Useful Linux commands:</strong></p>
+<p><strong>Trouble-shooting</strong>
+- raspistill will not take a picture and returns** <code>*failed to open vchiq instance</code>:
+1. Verify that the camera is connected and the ribbon cable is not damaged:
+<code>vcgencmd get_camera</code>
+2. Determine if the camera or the still_[xxx].sh script is the issue:
+<code>raspistill -o /home/$USER/test.jpg</code>
+3. Modify permissions of the camera:
+<code>sudo chmod777 /dev/vchiq</code></p>
+<p>A Linux reader is required to read the Raspian imaged SD card, when plugged into a Windows PC. <a href="https://www.diskinternals.com/linux-reader/">Linux Reader</a> is a free option. Instructions can be found <a href="https://raspberrytips.com/read-raspberry-pi-sd-card-windows/">here</a>.</p>
+<p><strong>Tips:</strong></p>
+<ul>
+<li><p>Useful Linux commands:</p>
 <ul>
 <li>* wildcard (e.g. <code>*.jpg</code> == all jpeg files)</li>
 <li><code>control^A</code> bring cursor to beginning of line</li>
@@ -241,16 +252,8 @@ sudo raspistill -o /home/$USER/still_$USER/$USER.$DATE.jpg</code></pre>
 <li><code>nano file_name</code> make named file and open text editor</li>
 <li><code>sudo reboot      reboot pi</code></li>
 <li><code>sudo shutdown now</code> safely shutdown pi (reboots when plugged in again)</li>
+</ul></li>
 </ul>
-<p><strong>Trouble-shooting</strong>
-- raspistill will not take a picture and returns** <code>*failed to open vchiq instance</code>:
-1. Verify that the camera is connected and the ribbon cable is not damaged:
-<code>vcgencmd get_camera</code>
-2. Determine if the camera or the still_[xxx].sh script is the issue:
-<code>raspistill -o /home/$USER/test.jpg</code>
-3. Modify permissions of the camera:
-<code>sudo chmod777 /dev/vchiq</code></p>
-<p>A Linux reader is required to read the Raspian imaged SD card, when plugged into a Windows PC. <a href="https://www.diskinternals.com/linux-reader/">Linux Reader</a> is a free option. Instructions can be found <a href="https://raspberrytips.com/read-raspberry-pi-sd-card-windows/">here</a>.</p>
 
 </div>
             </section>

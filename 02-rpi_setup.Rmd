@@ -60,7 +60,8 @@ password:
   
 **6. Make a folder/directory named 'still' to hold images: **
 ```mkdir still_[xxx]```
-*Note: [xxx] refers to the login name of the Raspberry Pi associated with the iLAM*
+
+  - *Note: [xxx] refers to the login name of the Raspberry Pi associated with the iLAM*
 
 **7. Make a directory named script to hold scripts: **
 ```mkdir script_[xxx]``` 
@@ -99,7 +100,7 @@ sudo raspistill -o /home/$USER/still_$USER/$USER.$DATE.jpg
 ```
 sudo crontab -e
 ```
-  - Select first option to edit the crontab in nano
+  - Select the first option to edit the crontab in nano
   - Copy the following to the bottom of the file:
 ```
 */2 *  *   *   * sh /home/$USER/script_$USER/still_$USER.sh 2>&1

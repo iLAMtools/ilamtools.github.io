@@ -122,6 +122,7 @@ imsub(x %inr% c(x_left,x_right), y %inr% c(y_bot,y_top)) %>% plot()
 ```
 
   - Find all movements by image subtraction, global thresholding, and blob detection in the iLAM wrapper function ```find_movements()```. 
+  
     -Additional *optional* settings:
       - *n_blr:* Integer value to set blur radius to denoise image and reduce graininess, prior to image subtraction (default: n_blr = 3)
       - *n_grw:* Integer value for n_cln multiplier to "grow" and aggregate blobs within a given proximity. For example, when n_cln=5 and n_grw = 1.5, blobs are first shrunk by 5 pixels and then grown by 5x1.5=7.5 pixels (default: n_grw = 1.5)
@@ -194,11 +195,10 @@ make_gif(out_file_name,
 knitr::include_graphics("images/ilam_photinus.gif")
 ```
 
-*Note: For more details/customization, look "under-the-hood" at the ```find_movements()``` and ```find_threshold()``` functions* 
-
   **Tips:**
+  
 - First test parameters settings for ```find_movements()``` with a subset of experimental images: e.g.,  ```find_movements(files = file_names[1:100]) ```
-- If find_movements() crashes, returns excess small blobs/movements, and/or returns excess blobs/movements that do NOT correspond to REAL movements, then increase the n_thr or p_sample values. If this issue continues, then remove any days at the experiment end where all/most insects have died; this can downwardly bias the # of pixel differences expected across images. 
-- If find_movements() returns many small blobs/animal and you desire one blob/animal movement, then increase the n_cln and/or n_grw values
+- If ```find_movements()``` crashes, returns excess small blobs/movements, and/or returns excess blobs/movements that do NOT correspond to REAL movements, then increase the n_thr or p_sample values. If this issue continues, then remove any days at the experiment end where all/most insects have died; this can downwardly bias the # of pixel differences expected across images. 
+- If ```find_movements()``` returns many small blobs/animal and you desire one blob/animal movement, then increase the n_cln and/or n_grw values
 
 
