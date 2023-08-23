@@ -74,7 +74,7 @@ setwd("/~/iLAM/exp_a/")
 
 ```
 
-  - Update values for every cage and/or experiment; these will be transferred to metadata output and fed as input settings to the find_movements() iLAM wrapper function:
+  - Update and tailor values for every cage and/or experiment; these values are recorded to metadata output and used as input settings for the *find_movements()* iLAM wrapper function:
     - **Cage-Specific:** Integer coordinates for image cropping (x_left, x_right, y_bot, y_top)
     - **Experiment-Specific:**
       - *n_thr:* Numeric threshold percentile; higher values indicate a more stringent filtering. e.g., at n_thr=0.999, only the darkest pixel differences >99.9% are retained for blob identification (default: n_thr = 0.996)
@@ -125,7 +125,7 @@ imsub(x %inr% c(x_left,x_right), y %inr% c(y_bot,y_top)) %>% plot()
     -Additional *optional* settings:
       - *n_blr:* Integer value to set blur radius to denoise image and reduce graininess, prior to image subtraction (default: n_blr = 3)
       - *n_grw:* Integer value for n_cln multiplier to "grow" and aggregate blobs within a given proximity. For example, when n_cln=5 and n_grw = 1.5, blobs are first shrunk by 5 pixels and then grown by 5x1.5=7.5 pixels (default: n_grw = 1.5)
-      - *n_max:* Integer value denoting the maximum number of pixel differences expected between two images; any values above this n_max will be considered as noisy and assigned an arbitrary value for subsequent filtering/removal. See \@ref(04-make_dam_output) for more information.   Example, if a moth movement = 3000 pixels and there are five moths in a cage, then the maximum number of differences expected is 15,000 pixels. (default: n_max = 75000)
+      - *n_max:* Integer value denoting the maximum number of pixel differences expected between two images; any values above this n_max will be considered as noisy and assigned an arbitrary value for subsequent filtering/removal. See \@ref(04-make_dam_output.Rmd) for more information.   Example, if a moth movement = 3000 pixels and there are five moths in a cage, then the maximum number of differences expected is 15,000 pixels. (default: n_max = 75000)
       - *find_thr:* Boolean value "T" (true) or "F" (false) to determine what pixel value cut-off corresponds to the n_thr percentile difference across a p_sample of image comparisons (default = "T")
       - *type_thr:* String value "absolute" or "relative" indicating whether to perform absolute  (capture all differences > n_thr for all pictures) or relative thresholding procedure (capture all differences > n_thr for each comparison) on set of images. We recommend the default, "absolute" option because the latter identifies false movements in images where there are no movements because it always retains the top pixel differences. (default: find_thr = "absolute")
       - *p_sample:* Numeric value denoting the proportion of image comparisons that should be used to determine the absolute threshold valaue
@@ -196,4 +196,9 @@ knitr::include_graphics("images/ilam_photinus.gif")
 
 *Note: For more details/customization, look "under-the-hood" at the ```find_movements()``` and ```find_threshold()``` functions* 
 
-**iLAM scripts can be cloned and downloaded from [insert link]**
+  **Tips:**
+- First test parameters settings for ```find_movements()``` with a subset of experimental images: e.g.,  ```find_movements(files = file_names[1:100]) ```
+- If find_movements() crashes, returns excess small blobs/movements, and/or returns excess blobs/movements that do NOT correspond to REAL movements, then increase the n_thr or p_sample values. If this issue continues, then remove any days at the experiment end where all/most insects have died; this can downwardly bias the # of pixel differences expected across images. 
+- If find_movements() returns many small blobs/animal and you desire one blob/animal movement, then increase the n_cln and/or n_grw values
+
+
