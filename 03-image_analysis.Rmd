@@ -74,14 +74,16 @@ setwd("/~/iLAM/exp_a/")
 
 ```
 
-  - Update values for every cage and/or experiment:
-    - Cage-Specific: Integer coordinates for image cropping (x_left, x_right, y_bot, y_top)
-    - Experiment-Specific:
-      - n_thr: Numeric threshold percentile; higher values indicate a more stringent filtering. e.g., at n_thr=0.999, only the darkest pixel differences > 99.9% will be retained for segmentation 
-      - n_cln: Integer value to clean up pixels; e.g., at n_cln = 5, this first "shrinks" to remove all isolated blobs smaller than 5 pixels large, and then grows remaining globs by 5 pixels to aggregate nearby blobs with eachother. See [imager documentation](https://asgr.github.io/imager/morphology.html) for more details. 
-      - genus: Character string for study organis,m
-      - species: Character string for study organism
-      - color: Character string to indicate whether the study organism appears "white" or "black" on the background 
+  - Update values for every cage and/or experiment; these will be transferred to metadata output and fed as input settings to the find_movements() iLAM wrapper function:
+    - **Cage-Specific:** Integer coordinates for image cropping (x_left, x_right, y_bot, y_top)
+    - **Experiment-Specific:**
+      - *n_thr:* Numeric threshold percentile; higher values indicate a more stringent filtering. e.g., at n_thr=0.999, only the darkest pixel differences >99.9% are retained for blob identification (default: n_thr = 0.996)
+      - *n_cln:* Integer value to clean up pixels; e.g., at n_cln = 5, this first "shrinks" to remove all isolated blobs smaller than 5 pixels, and then "grows" remaining blobs by 5\*n_grw pixels to aggregate nearby blobs with each other. (default: n_cln = 5, n_grw = 1.5)
+      - *genus:* Character string for study organism
+      - *species:* Character string for study organism
+      - *color:* Character string to indicate whether the study organism appears "white" or "black" on the background 
+      - For more information on threshold, clean, blur, etc., see [imager documentation](https://dahtah.github.io/imager/) for more details.
+      
 ```
 pi_sub_folder <- "ilam01"
 sex <- "male" #cage/project-specific
@@ -102,17 +104,17 @@ end_photophase = 21 #project-specific, time that dark starts
 genus = "photinus" #project-specific
 species = "marginellus" #project-specific
 animal = "black" #project-specific, during the night, does the animal appear "white" on a dark background or "black" on a light background? This is VERY important (!) because it determines whether "movements" identify insects whom left vs. arrived between frames 
-###
 ```
 
   - Create a vector of .jpg image file names to be analyzed
+  
 ```
 file_names <- list.files(pi_sub_folder,
                          pattern= "*.jpg",
                          full.names = TRUE)
 ```
 
-*Note: If you do not know which values to use for cropping (x_left, x_right, y_bot, y_top), you can test with this command. Historically, we identify crop setting that a) remove the outer edge of the cage and to center the ceiling and b) keep the picture area constant across all iLAMs (e.g., 1800x1600 pixels)*
+*We identify cropping locations that remove the outer edges of the cage, and maintain a constant picture area across all iLAMs (e.g., 1800x1600 pixels) by the following command:*
 
 ``` 
 load.image(file_names[1]) %>%
@@ -120,6 +122,16 @@ imsub(x %inr% c(x_left,x_right), y %inr% c(y_bot,y_top)) %>% plot()
 ```
 
   - Find all movements by image subtraction, global thresholding, and blob detection in the iLAM wrapper function ```find_movements()```. 
+    -Additional *optional* settings:
+      - *n_blr:* Integer value to set blur radius to denoise image and reduce graininess, prior to image subtraction (default: n_blr = 3)
+      - *n_grw:* Integer value for n_cln multiplier to "grow" and aggregate blobs within a given proximity. For example, when n_cln=5 and n_grw = 1.5, blobs are first shrunk by 5 pixels and then grown by 5x1.5=7.5 pixels (default: n_grw = 1.5)
+      - *n_max:* Integer value denoting the maximum number of pixel differences expected between two images; any values above this n_max will be considered as noisy and assigned an arbitrary value for subsequent filtering/removal. See \@ref(04-make_dam_output) for more information.   Example, if a moth movement = 3000 pixels and there are five moths in a cage, then the maximum number of differences expected is 15,000 pixels. (default: n_max = 75000)
+      - *find_thr:* Boolean value "T" (true) or "F" (false) to determine what pixel value cut-off corresponds to the n_thr percentile difference across a p_sample of image comparisons (default = "T")
+      - *type_thr:* String value "absolute" or "relative" indicating whether to perform absolute  (capture all differences > n_thr for all pictures) or relative thresholding procedure (capture all differences > n_thr for each comparison) on set of images. We recommend the default, "absolute" option because the latter identifies false movements in images where there are no movements because it always retains the top pixel differences. (default: find_thr = "absolute")
+      - *p_sample:* Numeric value denoting the proportion of image comparisons that should be used to determine the absolute threshold valaue
+      - *channel:* String value denoting which color channel movements should be identified from (default: "grayscale")
+      
+      
 ```
 out <- find_movements(files = file_names, # list of file names 
                       n_thr = n_thr,      # threshold value (0.992 == "0.8%")
@@ -138,7 +150,7 @@ out <- find_movements(files = file_names, # list of file names
                       animal = animal)
 ```
 
-  - Update and save output containing all identified blobs, their size and location as a .csv in the current working directory. **Important: Even under optimal setting, sometimes there are "noisy" timepoints when blobs cannot easily be identified after subtracting two consecutive images. In these instances, 2,000,000 is assigned to the .csv for subsequent filtering and removal**
+  - Update and save output containing all identified blobs, their size and location as a .csv in the current working directory.
 
 ```
 #adds additional columns to dataframe

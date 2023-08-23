@@ -23,7 +23,7 @@
 <meta name="author" content="Jacob Dayton &amp; Avalon Owens" />
 
 
-<meta name="date" content="2023-08-20" />
+<meta name="date" content="2023-08-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -104,7 +104,7 @@
 <div id="post-process-image-segmentation" class="section level1 hasAnchor" number="4">
 <h1><span class="header-section-number">4</span> Post-Process Image Segmentation<a href="post-process-image-segmentation.html#post-process-image-segmentation" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>Below is a walk-through for the post-process image segmentation (i.e., blob identification) of iLAM images</p>
-<p><strong>1. Organize your file directory structure in a logical structure</strong></p>
+<p><strong>1. Organize your file directory structure in a logical, hierarchical structure</strong></p>
 <ul>
 <li>Universal iLAM functions are within <code>~/iLAM/scripts/</code></li>
 <li><code>~/iLAM/exp_a/</code> contains images, metadata, and analysis scripts specific to Experiment A</li>
@@ -139,7 +139,13 @@
 ## 25      ¦--make_gif.R              
 ## 26      ¦--parse_movements.R       
 ## 27      °--plot_movements.R</code></pre>
-<p><strong>2. Perform image segmentation for images taken from each iLAM (exp_a_ilam01.R, exp_a_ilam02.R, etc.)</strong></p>
+<p><strong>2. Perform image segmentation to identify movements across images taken by each iLAM (exp_a_ilam01.R, exp_a_ilam02.R, etc.)</strong></p>
+<div class="figure" style="text-align: left"><span style="display:block;" id="fig:bb"></span>
+<img src="images/segmentation_workflow.png" alt="Image segmentation workflow"  />
+<p class="caption">
+Figure 4.1: Image segmentation workflow
+</p>
+</div>
 <ul>
 <li>Load required packages and iLAM functions</li>
 </ul>
@@ -161,7 +167,19 @@ setwd(&quot;/~/iLAM/exp_a/&quot;)
    source(f)
 </code></pre>
 <ul>
-<li>Change values for every cage and experiment: crop (x_left, x_right, etc.), settings for image segmentation (blur, threshold, clean), species characters (genus, species, color)</li>
+<li>Update values for every cage and/or experiment; these will be transferred to metadata output and fed as input settings to the find_movements() iLAM wrapper function:
+<ul>
+<li>Cage-Specific: Integer coordinates for image cropping (x_left, x_right, y_bot, y_top)</li>
+<li>Experiment-Specific:
+<ul>
+<li>n_thr: Numeric threshold percentile; higher values indicate a more stringent filtering. e.g., at n_thr=0.999, only the darkest pixel differences &gt;99.9% are retained for blob identification (default: n_thr = 0.996)</li>
+<li>n_cln: Integer value to clean up pixels; e.g., at n_cln = 5, this first “shrinks” to remove all isolated blobs smaller than 5 pixels, and then “grows” remaining blobs by 5*n_grw pixels to aggregate nearby blobs with each other. (default: n_cln = 5, n_grw = 1.5)</li>
+<li>genus: Character string for study organism</li>
+<li>species: Character string for study organism</li>
+<li>color: Character string to indicate whether the study organism appears “white” or “black” on the background</li>
+<li>For more information on threshold, clean, blur, etc., see <a href="https://dahtah.github.io/imager/">imager documentation</a> for more details.</li>
+</ul></li>
+</ul></li>
 </ul>
 <pre><code>pi_sub_folder &lt;- &quot;ilam01&quot;
 sex &lt;- &quot;male&quot; #cage/project-specific
@@ -181,8 +199,7 @@ start_photophase = 5 #project-specific, time that lights turn on
 end_photophase = 21 #project-specific, time that dark starts
 genus = &quot;photinus&quot; #project-specific
 species = &quot;marginellus&quot; #project-specific
-animal = &quot;black&quot; #project-specific, during the night, does the animal appear &quot;white&quot; on a dark background or &quot;black&quot; on a light background? This is VERY important (!) because it determines whether &quot;movements&quot; identify insects whom left vs. arrived between frames 
-###</code></pre>
+animal = &quot;black&quot; #project-specific, during the night, does the animal appear &quot;white&quot; on a dark background or &quot;black&quot; on a light background? This is VERY important (!) because it determines whether &quot;movements&quot; identify insects whom left vs. arrived between frames </code></pre>
 <ul>
 <li>Create a vector of .jpg image file names to be analyzed</li>
 </ul>
@@ -193,7 +210,17 @@ animal = &quot;black&quot; #project-specific, during the night, does the animal 
 <pre><code>load.image(file_names[1]) %&gt;%
 imsub(x %inr% c(x_left,x_right), y %inr% c(y_bot,y_top)) %&gt;% plot()</code></pre>
 <ul>
-<li>Find all movements by image subtraction, global thresholding, and blob detection in the iLAM wrapper function <code>find_movements()</code></li>
+<li>Find all movements by image subtraction, global thresholding, and blob detection in the iLAM wrapper function <code>find_movements()</code>.
+-Additional <em>optional</em> settings:
+<ul>
+<li>n_blr: Integer value to set blur radius to denoise image and reduce graininess, prior to image subtraction (default: n_blr = 3)</li>
+<li>n_grw: Integer value for n_cln multiplier to “grow” and aggregate blobs within a given proximity. For example, when n_cln=5 and n_grw = 1.5, blobs are first shrunk by 5 pixels and then grown by 5x1.5=7.5 pixels (default: n_grw = 1.5)</li>
+<li>n_max: Integer value denoting the maximum number of pixel differences expected between two images; any values above this n_max will be considered as noisy and an arbitrary value assigned for subsequent filtering/removal. See @ref(04-make_dam_output) for more information. Example, if a moth movement = 3000 pixels and there are five moths in a cage, then the maximum number of differences expected is 15,000 pixels. (default: n_max = 75000)</li>
+<li>find_thr: Boolean value “T” (true) or “F” (false) to determine what pixel value cut-off corresponds to the n_thr percentile difference across a p_sample of image comparisons (default = “T”)</li>
+<li>type_thr: String value “absolute” or “relative” indicating whether to perform absolute (capture all differences &gt; n_thr for all pictures) or relative thresholding procedure (capture all differences &gt; n_thr for each comparison) on set of images. We recommend the default, “absolute” option because the latter identifies false movements in images where there are no movements because it always retains the top pixel differences. (default: find_thr = “absolute”)</li>
+<li>p_sample: Numeric value denoting the proportion of image comparisons that should be used to determine the absolute threshold valaue</li>
+<li>channel: String value denoting which color channel movements should be identified from (default: “grayscale”)</li>
+</ul></li>
 </ul>
 <pre><code>out &lt;- find_movements(files = file_names, # list of file names 
                       n_thr = n_thr,      # threshold value (0.992 == &quot;0.8%&quot;)
@@ -240,7 +267,7 @@ plot_movements(pi_sub_folder,
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:j"></span>
 <img src="images/ilam_plot_movement.jpg" alt="iLAM plot_movements() image"  />
 <p class="caption">
-Figure 4.1: iLAM plot_movements() image
+Figure 4.2: iLAM plot_movements() image
 </p>
 </div>
 <ul>
@@ -251,7 +278,7 @@ Figure 4.1: iLAM plot_movements() image
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:k"></span>
 <img src="images/ilam_photinus.gif" alt="iLAM make_gif() output"  />
 <p class="caption">
-Figure 4.2: iLAM make_gif() output
+Figure 4.3: iLAM make_gif() output
 </p>
 </div>
 <p><em>Note: For more details/customization, look “under-the-hood” at the <code>find_movements()</code> and <code>find_threshold()</code> functions</em></p>
