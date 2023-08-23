@@ -15,13 +15,11 @@ by_change_Pg <- parse_movements(file_mvmnts = paste0(out_file_name,".csv"),
 library(knitr)
 library(readr)
 
-example_by_change <- read_csv("data/Pgreeni.csv")[1:5,]
+example_by_change <- read_csv("data/example_by_change_Pg.csv")[1:5,]
 
 knitr::kable(example_by_change, error=FALSE, caption = "iLAM by_change data frame")
 
 ```
-
-
 
 
 2. Collapse all identified blobs (within by_change_[]) into a summarized dataframe containing the sum of blobs and number of blobs/movements observed per analyzed frame/timepoints (by_frame_[])
@@ -36,7 +34,9 @@ by_frame_Pg <-
 
 ```
 
-3. Noisy values were initially assigned an absurd value (2,000,000). This step changes 2,000,000 with NA and then replaces with average value of the preceding and succeeding timepoints
+3. Filter movements captured from rare, noisy images.
+
+  - Noisy values were initially assigned an arbitrary value (2,000,000). This step changes 2,000,000 with NA and then replaces with average value of the preceding and succeeding time points. These rare cases typically only occur at the image following a light-dark transition. For example, across a 7-day experiment (5040 images), only 0.4% image comparisons were assigned an arbitrary value. 
 
 ```
 by_frame_Pg <-
