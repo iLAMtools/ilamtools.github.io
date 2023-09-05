@@ -1,0 +1,53 @@
+# Sample Work-Flow
+
+**1. Rear and/or collect experimental insects:**
+
+**2. Set up experiment room:**
+  
+  - Arrange lighting
+  - Schedule light timers
+  - Arrange iLAM flight cages
+    
+**3. Furnish iLAMs:**
+  
+  - Fill water and/or food containers
+  - Add to base or ceiling of flight cages
+    
+**4. Program iLAMs** 
+  
+  - Modify crontab file
+  - Delete old images to free storage on Pi's SD card
+  - Verify that Pi and PC (that photos are uploaded to) contain sufficient storage for the experiment's duration
+  - Verify that camera is connected, centered, and focused
+  - If images are automatically uploaded, verify that Pis are connected to Wifi and synced to upload directory
+    
+**5. Load insects:**
+  
+  - Add insects (5-10/cage)
+  - Write and save a README.txt file with experiment information into directory that images are uploaded into
+    
+**6. Start experiment:**
+
+**7. Check-in:**
+  
+  - Verify images uploaded
+  - Verify that light transitions occurred at expected times
+  - Verify that SD card contains appropriate storage space for the experiment's duration
+    
+**8. End experiment:**
+
+**9. Store data:**
+  
+  - Sometimes, Wifi interruptions can prevent successful image upload. Verify that no images are missing from any Pis
+  - Directly download any missing images from Pis
+  - Save images in directory for analysis
+    
+**10. Identify movements by post-process image segmentation:**
+
+**11. Analyze and plot movement data from experiment:**
+  
+  
+**Tips:**
+  
+  - On average, a .jpg image captured by an iLAM requires 2.3-3.0 MB storage.
+  - If images are captured every two minutes for seven days, this requires: 11.6-15.1 GB storage/iLAM Pi

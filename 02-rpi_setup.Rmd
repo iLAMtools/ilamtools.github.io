@@ -79,7 +79,7 @@ sudo raspistill -o /home/$USER/still_$USER/$USER.$DATE.jpg
 
 **9. To automatically upload/copy images into a remote directory, (a) upload each image after it's taken, or (b) mount a remote directory.**
 
-  - ```ssh-keygen``` and ```ENTER``` to generate a key so script can automatically upload images without needing a password
+  - ```ssh-keygen``` and ```ENTER``` to generate a new SSH key to enable a custom script to automatically upload images without requiring a password input
   - ```ssh-copy-id -i ~/.ssh/id_rsa [remote_PC_hostname]@[remote_PC IP address]```
   - Input password for remote_PC
   - a. Add following line to the still_[xxx].sh
@@ -117,9 +117,17 @@ sudo crontab -e
 
 **Accessing Raspberry Pi image files on your PC:**
 
-  - Log in to the linux/powershell on your laptop
-  - Run the following command from the computer that you want to download images onto
-  ```scp pi@[IP]:~/still_[xxx]/*.jpg ~/Desktop```
+  - a. Download images via Command line
+    - Log in to the Linux/Powershell on your laptop
+    - ```scp pi@[IP address]:~/still_[xxx]/*.jpg ~/[target directory]```
+  - b. Download images with a free file transfer program (FTP) like [FileZilla](https://filezilla-project.org/)
+    - In *Site Manager*, choose *New site*
+    - Protocol: SFTP - SSH File Transfer Protocol
+    - Host: [IP Address of Raspberry Pi]
+    - Logon Type: *Normal*
+    - User: [Pi login name]
+    - Password: [Pi login password]
+    - *Connect*
 
 **Trouble-shooting**
   - raspistill will not take a picture and returns** ```*failed to open vchiq instance```:

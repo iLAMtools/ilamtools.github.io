@@ -1,0 +1,7 @@
+Task,Day,
+"Set up Experiment Room: Arrange lighting, Schedule light-timers, Arrange iLAM flight-cages",0,
+"Furnish iLAMs: Fill water containers, Add to cages",,
+"Program iLAMs: Change crontab, Delete old images, Verify camera is centered & focused",,
+Load Insects: Add insects (5-10/flight cage),,
+Start Experiment: ,1,
+"Check-in: Verify images continued uploading, Light transitions met expectations",2,

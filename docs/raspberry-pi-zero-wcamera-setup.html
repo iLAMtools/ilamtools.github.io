@@ -23,7 +23,7 @@
 <meta name="author" content="Jacob Dayton &amp; Avalon Owens" />
 
 
-<meta name="date" content="2023-08-23" />
+<meta name="date" content="2023-09-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -77,11 +77,12 @@
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Description</a></li>
-<li class="chapter" data-level="2" data-path="flight-cage-construction.html"><a href="flight-cage-construction.html"><i class="fa fa-check"></i><b>2</b> Flight-Cage Construction</a></li>
+<li class="chapter" data-level="2" data-path="flight-cage-construction.html"><a href="flight-cage-construction.html"><i class="fa fa-check"></i><b>2</b> Flight Cage Construction</a></li>
 <li class="chapter" data-level="3" data-path="raspberry-pi-zero-wcamera-setup.html"><a href="raspberry-pi-zero-wcamera-setup.html"><i class="fa fa-check"></i><b>3</b> Raspberry Pi Zero W/Camera Setup</a></li>
 <li class="chapter" data-level="4" data-path="post-process-image-segmentation.html"><a href="post-process-image-segmentation.html"><i class="fa fa-check"></i><b>4</b> Post-Process Image Segmentation</a></li>
 <li class="chapter" data-level="5" data-path="make-dam-output.html"><a href="make-dam-output.html"><i class="fa fa-check"></i><b>5</b> Make DAM Output</a></li>
 <li class="chapter" data-level="6" data-path="analyze-output.html"><a href="analyze-output.html"><i class="fa fa-check"></i><b>6</b> Analyze Output</a></li>
+<li class="chapter" data-level="7" data-path="sample-work-flow.html"><a href="sample-work-flow.html"><i class="fa fa-check"></i><b>7</b> Sample Work-Flow</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -163,8 +164,10 @@ Figure 3.1: Raspberry Pi Imager
 <pre><code>ssh login_name@[IP address]
 password:</code></pre>
 <p><strong>6. Make a folder/directory named ‘still’ to hold images: </strong>
-<code>mkdir still_[xxx]</code>
-<em>Note: [xxx] refers to the login name of the Raspberry Pi associated with the iLAM</em></p>
+<code>mkdir still_[xxx]</code></p>
+<ul>
+<li><em>Note: [xxx] refers to the login name of the Raspberry Pi associated with the iLAM</em></li>
+</ul>
 <p><strong>7. Make a directory named script to hold scripts: </strong>
 <code>mkdir script_[xxx]</code></p>
 <p><strong>8. Write a script using a text-editor (e.g., nano) named still_[xxx].sh:</strong>
@@ -178,7 +181,7 @@ sudo raspistill -o /home/$USER/still_$USER/$USER.$DATE.jpg</code></pre>
 </ul>
 <p><strong>9. To automatically upload/copy images into a remote directory, (a) upload each image after it’s taken, or (b) mount a remote directory.</strong></p>
 <ul>
-<li><code>ssh-keygen</code> and <code>ENTER</code> to generate a key so script can automatically upload images without needing a password</li>
+<li><code>ssh-keygen</code> and <code>ENTER</code> to generate a new SSH key to enable a custom script to automatically upload images without requiring a password input</li>
 <li><code>ssh-copy-id -i ~/.ssh/id_rsa [remote_PC_hostname]@[remote_PC IP address]</code></li>
 <li>Input password for remote_PC</li>
 <li><ol style="list-style-type: lower-alpha">
@@ -199,7 +202,7 @@ sudo raspistill -o /home/$USER/still_$USER/$USER.$DATE.jpg</code></pre>
 </ul>
 <pre><code>sudo crontab -e</code></pre>
 <ul>
-<li>Select first option to edit the crontab in nano</li>
+<li>Select the first option to edit the crontab in nano</li>
 <li>Copy the following to the bottom of the file:</li>
 </ul>
 <pre><code>*/2 *  *   *   * sh /home/$USER/script_$USER/still_$USER.sh 2&gt;&amp;1</code></pre>
@@ -213,9 +216,25 @@ sudo raspistill -o /home/$USER/still_$USER/$USER.$DATE.jpg</code></pre>
 */2 *  *   *   * sh /home/$USER/script_$USER/mount_$USER.sh </code></pre>
 <p><strong>Accessing Raspberry Pi image files on your PC:</strong></p>
 <ul>
-<li>Log in to the linux/powershell on your laptop</li>
-<li>Run the following command from the computer that you want to download images onto
-<code>scp pi@[IP]:~/still_[xxx]/*.jpg ~/Desktop</code></li>
+<li><ol style="list-style-type: lower-alpha">
+<li>Download images via Command line</li>
+</ol>
+<ul>
+<li>Log in to the Linux/Powershell on your laptop</li>
+<li><code>scp pi@[IP address]:~/still_[xxx]/*.jpg ~/[target directory]</code></li>
+</ul></li>
+<li><ol start="2" style="list-style-type: lower-alpha">
+<li>Download images with a free file transfer program (FTP) like <a href="https://filezilla-project.org/">FileZilla</a></li>
+</ol>
+<ul>
+<li>In <em>Site Manager</em>, choose <em>New site</em></li>
+<li>Protocol: SFTP - SSH File Transfer Protocol</li>
+<li>Host: [IP Address of Raspberry Pi]</li>
+<li>Logon Type: <em>Normal</em></li>
+<li>User: [Pi login name]</li>
+<li>Password: [Pi login password]</li>
+<li><em>Connect</em></li>
+</ul></li>
 </ul>
 <p><strong>Trouble-shooting</strong>
 - raspistill will not take a picture and returns** <code>*failed to open vchiq instance</code>:

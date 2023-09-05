@@ -114,7 +114,7 @@ file_names <- list.files(pi_sub_folder,
                          full.names = TRUE)
 ```
 
-*We identify cropping locations that remove the outer edges of the cage, and maintain a constant picture area across all iLAMs (e.g., 1800x1600 pixels) by the following command:*
+*We identify cropping locations that remove the outer edges of the cage, and maintain a constant picture area across all iLAMs (e.g., 1800x1600 pixels) with the following command:*
 
 ``` 
 load.image(file_names[1]) %>%

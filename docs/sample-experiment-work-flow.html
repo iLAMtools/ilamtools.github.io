@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>iLAM: imaging Locomotor Activity Monitor</title>
+  <title>7 Sample Experiment Work-Flow | iLAM: imaging Locomotor Activity Monitor</title>
   <meta name="description" content="This is the documentation for the iLAM project, a monitor to quantify diel and circadian insect activity" />
   <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="iLAM: imaging Locomotor Activity Monitor" />
+  <meta property="og:title" content="7 Sample Experiment Work-Flow | iLAM: imaging Locomotor Activity Monitor" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="This is the documentation for the iLAM project, a monitor to quantify diel and circadian insect activity" />
   <meta name="github-repo" content="ilam/daytonjn.github.io/" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="iLAM: imaging Locomotor Activity Monitor" />
+  <meta name="twitter:title" content="7 Sample Experiment Work-Flow | iLAM: imaging Locomotor Activity Monitor" />
   
   <meta name="twitter:description" content="This is the documentation for the iLAM project, a monitor to quantify diel and circadian insect activity" />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
+<link rel="prev" href="analyze-output.html"/>
 
-<link rel="next" href="flight-cage-construction.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -82,7 +82,7 @@
 <li class="chapter" data-level="4" data-path="post-process-image-segmentation.html"><a href="post-process-image-segmentation.html"><i class="fa fa-check"></i><b>4</b> Post-Process Image Segmentation</a></li>
 <li class="chapter" data-level="5" data-path="make-dam-output.html"><a href="make-dam-output.html"><i class="fa fa-check"></i><b>5</b> Make DAM Output</a></li>
 <li class="chapter" data-level="6" data-path="analyze-output.html"><a href="analyze-output.html"><i class="fa fa-check"></i><b>6</b> Analyze Output</a></li>
-<li class="chapter" data-level="7" data-path="sample-work-flow.html"><a href="sample-work-flow.html"><i class="fa fa-check"></i><b>7</b> Sample Work-Flow</a></li>
+<li class="chapter" data-level="7" data-path="sample-experiment-work-flow.html"><a href="sample-experiment-work-flow.html"><i class="fa fa-check"></i><b>7</b> Sample Experiment Work-Flow</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -102,29 +102,44 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">iLAM: imaging Locomotor Activity Monitor</h1>
-<p class="author"><em>Jacob Dayton &amp; Avalon Owens</em></p>
-<p class="date"><em>2023-09-05</em></p>
-</div>
-<div id="description" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">1</span> Description<a href="index.html#description" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>Historically, most insect chronoecological research uses direct observations, cameras, and/or infrared beam-based monitors to quantify movement across timed intervals. Although many systems are cheaper than the traditional infrared locomotor activity monitors (e.g., DAM/LAM), these options remain complicated to build and/or computationally intensive.</p>
-<p>We developed the <strong>imaging Locomotor Activity Monitor (iLAM)</strong>, an affordable system for activity quantification. The iLAM utilizes a <a href="https://www.raspberrypi.com/products/raspberry-pi-zero-w/">Raspberry Pi Zero W</a> computer and night-vision camera inside a flight cage to regularly photograph a population of insects at user-defined intervals.</p>
-<p>Customizable, modular R-scripts process consecutive images with <a href="https://cran.r-project.org/web/packages/imager/"><em>imager</em></a> and output a file containing the <em>number</em>, <em>size</em>, <em>location</em>, and <em>timing</em> of all identified movements. Movement data can be converted into DAM format or directly analyzed within the <a href="https://rethomics.github.io/"><em>Rethomics</em></a> <em>framework</em>.</p>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:x"></span>
-<img src="images/ilam_workflow.png" alt="iLAM Workflow"  />
-<p class="caption">
-Figure 1.1: iLAM Workflow
-</p>
-</div>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:v"></span>
-<img src="images/ilam_photinus.gif" alt="Representative firefly movements identified by iLAM system"  />
-<p class="caption">
-Figure 1.2: Representative firefly movements identified by iLAM system
-</p>
-</div>
-<p>This documentation provides instructions for (1) iLAM construction, (2) Raspberry Pi setup, (3) Image analysis in R, (4) Conversion of iLAM output to DAM format in R, and (5) Example results from Rethomics.</p>
+<div id="sample-experiment-work-flow" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">7</span> Sample Experiment Work-Flow<a href="sample-experiment-work-flow.html#sample-experiment-work-flow" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<ol style="list-style-type: decimal">
+<li>Rear and/or collect experimental insects</li>
+<li>Set up experiment room
+- Arrange lighting
+- Schedule light timers
+- Arrange iLAM flight cages</li>
+<li>Furnish iLAMs:
+- Fill water and/or food containers
+- Add to base or ceiling of flight cages</li>
+<li>Program iLAMs:
+- Modify crontab file
+- Delete old images to free storage on Pi’s SD card
+- Verify that Pi and PC (that photos are uploaded to) contain sufficient storage for the experiment’s duration
+- Verify that camera is connected, centered, and focused
+- If images are automatically uploaded, verify that Pis are connected to Wifi and synced to upload directory</li>
+<li>Load insects:
+- Add insects (5-10/cage)
+- Write and save a README.txt file with experiment information into directory that images are uploaded into</li>
+<li>Start experiment</li>
+<li>Check-in:
+- Verify images uploaded
+- Verify that light transitions occurred at expected times
+- Verify that SD card contains appropriate storage space for the experiment’s duration</li>
+<li>End experiment</li>
+<li>Store data:
+- Sometimes, Wifi interruptions can prevent successful image upload. Verify that no images are missing from any Pis
+- Directly download any missing images from Pis
+- Save images in directory for analysis</li>
+<li>Identify movements by post-process image segmentation using iLAM (or other comparable) scripts</li>
+<li>Analyze and plot movement data from experiment</li>
+</ol>
+<pre><code>**Tips:**</code></pre>
+<ul>
+<li>On average, a .jpg image captured by an iLAM requires 2.3-3.0 MB storage.</li>
+<li>If images are captured every two minutes for seven days, this requires: 11.6-15.1 GB storage/iLAM Pi</li>
+</ul>
 
 </div>
             </section>
@@ -132,8 +147,8 @@ Figure 1.2: Representative firefly movements identified by iLAM system
           </div>
         </div>
       </div>
+<a href="analyze-output.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
-<a href="flight-cage-construction.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -164,7 +179,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/daytonjn/ilam/edit/main/index.Rmd",
+"link": "https://github.com/daytonjn/ilam/edit/main/06-experiment_workflow.Rmd",
 "text": "Edit"
 },
 "history": {
@@ -172,7 +187,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/daytonjn/ilam/blob/main/index.Rmd",
+"link": "https://github.com/daytonjn/ilam/blob/main/06-experiment_workflow.Rmd",
 "text": null
 },
 "download": null,
