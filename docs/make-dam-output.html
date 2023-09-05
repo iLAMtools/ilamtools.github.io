@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="post-process-image-segmentation.html"/>
-<link rel="next" href="analyze-output.html"/>
+<link rel="next" href="analyze-movement-data.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -78,10 +78,10 @@
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Description</a></li>
 <li class="chapter" data-level="2" data-path="flight-cage-construction.html"><a href="flight-cage-construction.html"><i class="fa fa-check"></i><b>2</b> Flight Cage Construction</a></li>
-<li class="chapter" data-level="3" data-path="raspberry-pi-zero-wcamera-setup.html"><a href="raspberry-pi-zero-wcamera-setup.html"><i class="fa fa-check"></i><b>3</b> Raspberry Pi Zero W/Camera Setup</a></li>
+<li class="chapter" data-level="3" data-path="raspberry-pi-zero-wcamera-setup.html"><a href="raspberry-pi-zero-wcamera-setup.html"><i class="fa fa-check"></i><b>3</b> Raspberry Pi Zero w/Camera Setup</a></li>
 <li class="chapter" data-level="4" data-path="post-process-image-segmentation.html"><a href="post-process-image-segmentation.html"><i class="fa fa-check"></i><b>4</b> Post-Process Image Segmentation</a></li>
 <li class="chapter" data-level="5" data-path="make-dam-output.html"><a href="make-dam-output.html"><i class="fa fa-check"></i><b>5</b> Make DAM Output</a></li>
-<li class="chapter" data-level="6" data-path="analyze-output.html"><a href="analyze-output.html"><i class="fa fa-check"></i><b>6</b> Analyze Output</a></li>
+<li class="chapter" data-level="6" data-path="analyze-movement-data.html"><a href="analyze-movement-data.html"><i class="fa fa-check"></i><b>6</b> Analyze Movement Data</a></li>
 <li class="chapter" data-level="7" data-path="sample-work-flow.html"><a href="sample-work-flow.html"><i class="fa fa-check"></i><b>7</b> Sample Work-Flow</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -104,6 +104,7 @@
             <section class="normal" id="section-">
 <div id="make-dam-output" class="section level1 hasAnchor" number="5">
 <h1><span class="header-section-number">5</span> Make DAM Output<a href="make-dam-output.html#make-dam-output" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Steps to convert iLAM output into Trikinetics DAM format for locomotor activity analyses</p>
 <ol style="list-style-type: decimal">
 <li>Read in iLAM output from image_analysis and parse into a dataframe containing the size, centroid location, and origin (time, pi) of all identified blobs (by_change) with <code>parse_movements()</code></li>
 </ol>
@@ -978,7 +979,7 @@ write_tsv(ilam_Pg, &quot;Monitor43.txt&quot;, col_names = F) #some analysis prog
         </div>
       </div>
 <a href="post-process-image-segmentation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="analyze-output.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="analyze-movement-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

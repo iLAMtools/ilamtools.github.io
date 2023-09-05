@@ -11,10 +11,12 @@ tab:q
 tab:o
 tab:n
 tab:p
+tab:nn
+fig:c
 description
 flight-cage-construction
 raspberry-pi-zero-wcamera-setup
 post-process-image-segmentation
 make-dam-output
-analyze-output
+analyze-movement-data
 sample-work-flow

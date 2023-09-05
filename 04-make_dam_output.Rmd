@@ -1,4 +1,5 @@
 # Make DAM Output
+Steps to convert iLAM output into Trikinetics DAM format for locomotor activity analyses
 
 1. Read in iLAM output from image_analysis and parse into a dataframe containing the size, centroid location, and origin (time, pi) of all identified blobs (by_change) with ```parse_movements()```
 ```

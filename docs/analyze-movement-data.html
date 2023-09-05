@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>6 Analyze Movement Data | iLAM: imaging Locomotor Activity Monitor</title>
+  <meta name="description" content="This is the documentation for the iLAM project, a monitor to quantify diel and circadian insect activity" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="6 Analyze Movement Data | iLAM: imaging Locomotor Activity Monitor" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="This is the documentation for the iLAM project, a monitor to quantify diel and circadian insect activity" />
+  <meta name="github-repo" content="ilam/daytonjn.github.io/" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="6 Analyze Movement Data | iLAM: imaging Locomotor Activity Monitor" />
+  
+  <meta name="twitter:description" content="This is the documentation for the iLAM project, a monitor to quantify diel and circadian insect activity" />
+  
+
+<meta name="author" content="Jacob Dayton &amp; Avalon Owens" />
+
+
+<meta name="date" content="2023-09-05" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="make-dam-output.html"/>
+<link rel="next" href="sample-work-flow.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">iLAM</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Description</a></li>
+<li class="chapter" data-level="2" data-path="flight-cage-construction.html"><a href="flight-cage-construction.html"><i class="fa fa-check"></i><b>2</b> Flight Cage Construction</a></li>
+<li class="chapter" data-level="3" data-path="raspberry-pi-zero-wcamera-setup.html"><a href="raspberry-pi-zero-wcamera-setup.html"><i class="fa fa-check"></i><b>3</b> Raspberry Pi Zero w/Camera Setup</a></li>
+<li class="chapter" data-level="4" data-path="post-process-image-segmentation.html"><a href="post-process-image-segmentation.html"><i class="fa fa-check"></i><b>4</b> Post-Process Image Segmentation</a></li>
+<li class="chapter" data-level="5" data-path="make-dam-output.html"><a href="make-dam-output.html"><i class="fa fa-check"></i><b>5</b> Make DAM Output</a></li>
+<li class="chapter" data-level="6" data-path="analyze-movement-data.html"><a href="analyze-movement-data.html"><i class="fa fa-check"></i><b>6</b> Analyze Movement Data</a></li>
+<li class="chapter" data-level="7" data-path="sample-work-flow.html"><a href="sample-work-flow.html"><i class="fa fa-check"></i><b>7</b> Sample Work-Flow</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">iLAM: imaging Locomotor Activity Monitor</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="analyze-movement-data" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">6</span> Analyze Movement Data<a href="analyze-movement-data.html#analyze-movement-data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In our research, we utilize the <em>Rethomics</em> framework for data analysis. A more detailed walk-through can be found in the original <a href="https://doi.org/10.1371/journal.pone.0209331"><em>Rethomics</em></a> publication and online <a href="https://rethomics.github.io/">tutorial</a>.</p>
+<p>Some example transformations and visualizations of iLAM/DAM2 data are presented below:</p>
+<ul>
+<li>Read in metadata for experiment</li>
+</ul>
+<pre><code>metadata_o = read_delim(&quot;metadata_onub.csv&quot;, delim = &quot;;&quot;, escape_double = FALSE, trim_ws = TRUE)
+</code></pre>
+<table style="width:100%;">
+<caption><span id="tab:nn">Table 6.1: </span>iLAM metadata example</caption>
+<colgroup>
+<col width="12%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="8%" />
+<col width="9%" />
+<col width="9%" />
+<col width="5%" />
+<col width="5%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">file</th>
+<th align="left">start_datetime</th>
+<th align="left">stop_datetime</th>
+<th align="left">swap_datetime</th>
+<th align="right">region_id</th>
+<th align="left">species</th>
+<th align="left">pi</th>
+<th align="left">sex</th>
+<th align="left">strain</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">iLAM_BE_mf.txt</td>
+<td align="left">2022-08-10 03:00:00</td>
+<td align="left">2022-08-18 02:58:00</td>
+<td align="left">2022-08-13 03:00:00</td>
+<td align="right">1</td>
+<td align="left">O_nubilalis</td>
+<td align="left">mothra01</td>
+<td align="left">male</td>
+<td align="left">be</td>
+</tr>
+<tr class="even">
+<td align="left">iLAM_BE_mf.txt</td>
+<td align="left">2022-08-10 03:00:00</td>
+<td align="left">2022-08-18 02:58:00</td>
+<td align="left">2022-08-13 03:00:00</td>
+<td align="right">2</td>
+<td align="left">O_nubilalis</td>
+<td align="left">mothra02</td>
+<td align="left">female</td>
+<td align="left">be</td>
+</tr>
+<tr class="odd">
+<td align="left">iLAM_BE_mf.txt</td>
+<td align="left">2022-08-10 03:00:00</td>
+<td align="left">2022-08-18 02:58:00</td>
+<td align="left">2022-08-13 03:00:00</td>
+<td align="right">3</td>
+<td align="left">O_nubilalis</td>
+<td align="left">mothra03</td>
+<td align="left">female</td>
+<td align="left">be</td>
+</tr>
+<tr class="even">
+<td align="left">iLAM_BE_mf.txt</td>
+<td align="left">2022-08-10 03:00:00</td>
+<td align="left">2022-08-18 02:58:00</td>
+<td align="left">2022-08-13 03:00:00</td>
+<td align="right">4</td>
+<td align="left">O_nubilalis</td>
+<td align="left">plantcam01</td>
+<td align="left">female</td>
+<td align="left">be</td>
+</tr>
+<tr class="odd">
+<td align="left">iLAM_BE_mf.txt</td>
+<td align="left">2022-08-10 03:00:00</td>
+<td align="left">2022-08-18 02:58:00</td>
+<td align="left">2022-08-13 03:00:00</td>
+<td align="right">5</td>
+<td align="left">O_nubilalis</td>
+<td align="left">plantcam02</td>
+<td align="left">male</td>
+<td align="left">be</td>
+</tr>
+<tr class="even">
+<td align="left">iLAM_BE_mf.txt</td>
+<td align="left">2022-08-10 03:00:00</td>
+<td align="left">2022-08-18 02:58:00</td>
+<td align="left">2022-08-13 03:00:00</td>
+<td align="right">6</td>
+<td align="left">O_nubilalis</td>
+<td align="left">plantcam03</td>
+<td align="left">male</td>
+<td align="left">be</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Link metadata with the iLAM files</li>
+</ul>
+<pre><code>metadata_o = metadata_o %&gt;% link_dam_metadata(result_dir = getwd())
+iLAM_onub &lt;- load_dam(metadata_o) 
+summary(iLAM_onub)
+</code></pre>
+<ul>
+<li>Split data by identifiers</li>
+</ul>
+<pre><code>iLAM_BE = iLAM_onub[xmv(strain) == &quot;be&quot;]
+</code></pre>
+<ul>
+<li>Add unique identifier (uid) for specific identification for each cage/experiment/species</li>
+</ul>
+<pre><code>iLAM_BE[, uid := 1:.N, meta=T]
+</code></pre>
+<ul>
+<li>For each timepoint, collapse rows/observations into 30 minute bins
+<ul>
+<li>The sum of every 15 rows; 15 = seq(0,14) = 30min bins</li>
+</ul></li>
+</ul>
+<pre><code>iLAM_BE[, activity_bin := rollapply(activity, list(seq(0, 14)),
+                                          FUN=function(x) sum(x, na.rm=TRUE),
+                                          partial = TRUE, fill = NA),
+              by = xmv(uid)]
+</code></pre>
+<ul>
+<li>For each uid, retain only the 15th row (t) = 30min bins</li>
+</ul>
+<pre><code>iLAM_BE = iLAM_BE[, .SD[seq(1, .N, 15)], by = id]
+</code></pre>
+<ul>
+<li>Calculate average activity across all bins to normalize activity_bins between cages</li>
+</ul>
+<pre><code>iLAM_BE[, uid := 1:.N, meta=T]
+iLAM_BE[, fctr := .(10/mean(activity_bin)), by = xmv(uid)]
+iLAM_BE[, .N, by=xmv(uid)] #verify that proper number of bins were kept
+
+iLAM_BE[, .(mean_acti = 1/mean(activity_bin)), by=xmv(uid)]
+</code></pre>
+<ul>
+<li>Multiple activity_bin by normalization factor</li>
+</ul>
+<pre><code>iLAM_BE[, acn := activity_bin*fctr]
+</code></pre>
+<ul>
+<li>Visualize average across individuals for first 72 hours</li>
+</ul>
+<pre><code>p_be_activity = ggetho(iLAM_BE, aes(y=acn, colour=sex), time_wrap = hours(25)) +
+  stat_pop_etho(size=0.75) +
+  stat_ld_annotations(l_duration = as.numeric(hours(16)),
+                      ld_colours = c(&quot;#FDFD66&quot;,&quot;black&quot;)) +
+  stat_ld_annotations(x_limits = days(c(3,7)),
+                      ld_colours = c(&quot;grey&quot;, &quot;black&quot;)) +
+  theme_bw() + theme(text = element_text(size = 12, family = &quot;sans&quot;, color = &#39;black&#39;),
+                     panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(),
+                     legend.position = c(0.12,0.7),
+                     legend.text = element_text(size=10, face = &quot;italic&quot;),
+                     legend.title = element_blank()) +
+  ylab(&quot;Activity&quot;) + xlab(&quot;Time (ZT)&quot;) +
+  scale_color_manual(values = c(&quot;#E69F00&quot;, &quot;#56B4E9&quot;),
+                     labels = c(paste(&quot;O. nubilalis&quot;, &quot;\u2640&quot;),
+                                paste(&quot;O. nubilalis&quot;, &quot;\u2642&quot;))) +
+  scale_fill_manual(values = c(&quot;#E69F00&quot;, &quot;#56B4E9&quot;),
+                    labels = c(paste(&quot;O. nubilalis&quot;, &quot;\u2640&quot;),
+                                paste(&quot;O. nubilalis&quot;, &quot;\u2642&quot;))) +
+  ylim(c(0,60))
+  </code></pre>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:c"></span>
+<img src="images/analysis_be.png" alt="Activity of European corn borer moths in LD. Activity was captured by iLAM across three days of LD (A). Phase of peak activity (B) and percent activity that occured at night (C)."  />
+<p class="caption">
+Figure 6.1: Activity of European corn borer moths in LD. Activity was captured by iLAM across three days of LD (A). Phase of peak activity (B) and percent activity that occured at night (C).
+</p>
+</div>
+<p><strong>Tips:</strong></p>
+<p>There are <strong>many</strong> other useful R packages that can be leveraged to analyze locomotor activity data in the DAM2 format. Some examples are:</p>
+<ul>
+<li><a href="https://doi.org/10.1038/s41598-022-08195-z"><em>Rtivity</em></a> publication and online <a href="https://ruisilva.shinyapps.io/rtivity/">shiny app</a></li>
+<li><a href="https://doi.org/10.1177/0748730419862474"><em>RhythmicAlly</em></a> publication and online <a href="https://github.com/abhilashlakshman/RhythmicAlly">repository</a></li>
+<li><a href="https://doi.org/10.1177/07487304221077662"><em>VANESSA</em></a> publication and online <a href="https://github.com/orijitghosh/VANESSA-DAM">repository</a></li>
+</ul>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="make-dam-output.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="sample-work-flow.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/daytonjn/ilam/edit/main/05-analyze_output.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/daytonjn/ilam/blob/main/05-analyze_output.Rmd",
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

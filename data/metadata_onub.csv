@@ -1,0 +1,7 @@
+file;start_datetime;stop_datetime;swap_datetime;region_id;species;pi;sex;strain
+iLAM_BE_mf.txt;2022-08-10 03:00:00;2022-08-18 02:58:00;2022-08-13 03:00:00;1;O_nubilalis;mothra01;male;be
+iLAM_BE_mf.txt;2022-08-10 03:00:00;2022-08-18 02:58:00;2022-08-13 03:00:00;2;O_nubilalis;mothra02;female;be
+iLAM_BE_mf.txt;2022-08-10 03:00:00;2022-08-18 02:58:00;2022-08-13 03:00:00;3;O_nubilalis;mothra03;female;be
+iLAM_BE_mf.txt;2022-08-10 03:00:00;2022-08-18 02:58:00;2022-08-13 03:00:00;4;O_nubilalis;plantcam01;female;be
+iLAM_BE_mf.txt;2022-08-10 03:00:00;2022-08-18 02:58:00;2022-08-13 03:00:00;5;O_nubilalis;plantcam02;male;be
+iLAM_BE_mf.txt;2022-08-10 03:00:00;2022-08-18 02:58:00;2022-08-13 03:00:00;6;O_nubilalis;plantcam03;male;be

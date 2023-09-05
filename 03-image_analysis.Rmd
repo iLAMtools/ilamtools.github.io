@@ -1,6 +1,6 @@
 # Post-Process Image Segmentation
 
-Below is a walk-through for the post-process image segmentation (i.e., blob identification) of iLAM images 
+Below is a walk-through for the post-process image segmentation (i.e., blob identification) of iLAM images to identify movements 
 
 **1. Organize your file directory structure in a logical, hierarchical structure**
 

@@ -1,4 +1,4 @@
-# Raspberry Pi Zero W/Camera Setup
+# Raspberry Pi Zero w/Camera Setup
   Steps to program the Raspberry Pi Zero computers to capture and store images:  
 
 **1. Obtain necessary cables/connectors:**
