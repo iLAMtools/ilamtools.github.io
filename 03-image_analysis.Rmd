@@ -4,7 +4,7 @@ Below is a walk-through for the post-process image segmentation (i.e., blob iden
 
 **1. Organize your file directory structure in a logical, hierarchical structure**
 
-  - Universal iLAM functions are within ```~/iLAM/scripts/```
+  - Universal iLAM functions are within ```~/iLAM/scripts/``` or can be downloaded from this zip folder here: `r {xfun::embed_dir("./ilam_scripts/", text='iLAM wrapper functions')}`
   - ```~/iLAM/exp_a/``` contains images, metadata, and analysis scripts specific to Experiment A
   - Experiment A's images from ilam_01 and ilam_02 are saved in ```~/iLAM/exp_a/ilam_01/``` and ```~/iLAM/exp_a/ilam_02/```, respectively
   - CSV output containing the size, location, and timing of all blobs/movements for each iLAM cages for Experiment A (i.e., ilam_01 and ilam_02):```~/iLAM/exp_a/iLAM_exp_a.txt/```, with corresponding metadata: ```~/iLAM/exp_a/metadata_exp_a.csv/```

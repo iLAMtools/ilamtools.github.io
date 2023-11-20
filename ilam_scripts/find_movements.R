@@ -1,9 +1,6 @@
 # identifies all blobs (movements) given a set of images, threshold %, and cleaning value
 # returns a dataframe with details (size, x- & y-coordinates) of movement in each frame
 
-# 2023/02/20 - Jacob Dayton 
-# now includes method for global thresholding across all image comparisons
-
 find_movements <- function(files,              # list of file names 
                           n_thr = 0.996,      # threshold value (0.992 == "0.8%")
                           n_cln = 5,          # value for cleaning (number of pixels)

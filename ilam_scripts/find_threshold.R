@@ -1,4 +1,4 @@
-# 2023/02/17 - Jacob Dayton
+# 2023/02/17
 
 # pixel difference at n_thr quantile() for 2% random sampling of consecutive image subtractions
 # mean value of quantile pixel differences is returned for use in find_movements()
