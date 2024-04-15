@@ -1,7 +1,7 @@
 # Flight Cage Construction
   The paired iLAM flight cages described in our original publication used the following materials:
   
-```{r y, fig.cap='iLAM Materials', echo=FALSE}
+```{r y, fig.cap='iLAM Materials', echo=FALSE, results=FALSE}
 library(knitr)
 library(readr)
 
