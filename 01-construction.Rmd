@@ -2,7 +2,7 @@
 
 The paired iLAM flight cages described in our original publication used the following materials:
 
-```{r y, fig.cap='iLAM Materials', echo=FALSE, quiet=TRUE}
+```{r y, fig.cap='iLAM Materials', echo=FALSE, quiet=TRUE, warning=FALSE}
 library(knitr)
 library(readr)
 

@@ -251,12 +251,12 @@ sudo raspistill -o /home/$USER/still_$USER/$USER.$DATE.jpg</code></pre>
 <li><p>Input password for remote_PC</p></li>
 <li><p>Option A: Add the following line to the end of still_[xxx].sh:</p></li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="raspberry-pi-zero-wcamera-setup.html#cb5-1" tabindex="-1"></a><span class="fu">scp</span> /home/<span class="va">$USER</span>/still_<span class="va">$USER</span>/<span class="va">$USER</span>.<span class="va">$DATE</span>.jpg <span class="pp">[</span><span class="ss">remote_PC_hostname</span><span class="pp">]</span>@[remote_PC IP address]:[directory that you want images saved into]/</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="raspberry-pi-zero-wcamera-setup.html#cb3-1" tabindex="-1"></a><span class="fu">scp</span> /home/<span class="va">$USER</span>/still_<span class="va">$USER</span>/<span class="va">$USER</span>.<span class="va">$DATE</span>.jpg <span class="pp">[</span><span class="ss">remote_PC_hostname</span><span class="pp">]</span>@[remote_PC IP address]:[directory that you want images saved into]/</span></code></pre></div>
 <ul>
 <li>Option B: Add the following lines to the end of still_[xxx].sh:</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="raspberry-pi-zero-wcamera-setup.html#cb6-1" tabindex="-1"></a><span class="fu">sleep</span> 10</span>
-<span id="cb6-2"><a href="raspberry-pi-zero-wcamera-setup.html#cb6-2" tabindex="-1"></a><span class="fu">scp</span> /home/<span class="va">$USER</span>/still_<span class="va">$USER</span>/<span class="va">$USER</span>.<span class="va">$DATE</span>.jpg /home/<span class="va">$USER</span>/mount_<span class="va">$USER</span>/</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="raspberry-pi-zero-wcamera-setup.html#cb4-1" tabindex="-1"></a><span class="fu">sleep</span> 10</span>
+<span id="cb4-2"><a href="raspberry-pi-zero-wcamera-setup.html#cb4-2" tabindex="-1"></a><span class="fu">scp</span> /home/<span class="va">$USER</span>/still_<span class="va">$USER</span>/<span class="va">$USER</span>.<span class="va">$DATE</span>.jpg /home/<span class="va">$USER</span>/mount_<span class="va">$USER</span>/</span></code></pre></div>
 <p><strong>10. Schedule the imaging script to run periodically with crontab:</strong></p>
 <ul>
 <li>Access the crontab file</li>
@@ -266,7 +266,7 @@ sudo raspistill -o /home/$USER/still_$USER/$USER.$DATE.jpg</code></pre>
 <li>Select the first option to edit the crontab in nano</li>
 <li>Copy the following to the bottom of the file:</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="raspberry-pi-zero-wcamera-setup.html#cb8-1" tabindex="-1"></a><span class="ex">*/2</span> <span class="pp">*</span>  <span class="pp">*</span>   <span class="pp">*</span>   <span class="pp">*</span> sh /home/<span class="va">$USER</span>/script_<span class="va">$USER</span>/still_<span class="va">$USER</span>.sh <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="raspberry-pi-zero-wcamera-setup.html#cb6-1" tabindex="-1"></a><span class="ex">*/2</span> <span class="pp">*</span>  <span class="pp">*</span>   <span class="pp">*</span>   <span class="pp">*</span> sh /home/<span class="va">$USER</span>/script_<span class="va">$USER</span>/still_<span class="va">$USER</span>.sh <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span></span></code></pre></div>
 <ul>
 <li><p>This tells the pi to execute the still.sh file every 2 minutes (the order is minute, hour, day of month, month, day of week). When setting up a new crontab, always run it past <a href="https://crontab.guru/"><em>crontab.guru</em></a>!</p></li>
 <li><p><code>control^X</code> to exit (type y when asked if you want to save)</p></li>
@@ -277,7 +277,7 @@ sudo raspistill -o /home/$USER/still_$USER/$USER.$DATE.jpg</code></pre>
 <li><p>Option A: Download images via Command line</p>
 <ul>
 <li><p>Log in to the Linux/Powershell on your laptop</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="raspberry-pi-zero-wcamera-setup.html#cb9-1" tabindex="-1"></a><span class="fu">scp</span> pi@[IP address]:~/still_<span class="pp">[</span><span class="ss">xxx</span><span class="pp">]</span>/<span class="pp">*</span>.jpg ~/[target directory]<span class="kw">`</span></span></code></pre></div></li>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="raspberry-pi-zero-wcamera-setup.html#cb7-1" tabindex="-1"></a><span class="fu">scp</span> pi@[IP address]:~/still_<span class="pp">[</span><span class="ss">xxx</span><span class="pp">]</span>/<span class="pp">*</span>.jpg ~/[target directory]<span class="kw">`</span></span></code></pre></div></li>
 </ul></li>
 <li><p>Option B: Download images via a free file transfer program (FTP) like <a href="https://filezilla-project.org/">FileZilla</a></p>
 <ul>
@@ -294,9 +294,9 @@ sudo raspistill -o /home/$USER/still_$USER/$USER.$DATE.jpg</code></pre>
 <p>-raspistill will not take a picture and returns** <code>*failed to open vchiq instance</code>:</p>
 <ol style="list-style-type: decimal">
 <li><p>Verify that the camera is connected and the ribbon cable is not damaged:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="raspberry-pi-zero-wcamera-setup.html#cb10-1" tabindex="-1"></a><span class="ex">vcgencmd</span> get_camera</span></code></pre></div></li>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="raspberry-pi-zero-wcamera-setup.html#cb8-1" tabindex="-1"></a><span class="ex">vcgencmd</span> get_camera</span></code></pre></div></li>
 <li><p>Determine if the camera or the still_[xxx].sh script is the issue:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="raspberry-pi-zero-wcamera-setup.html#cb11-1" tabindex="-1"></a><span class="ex">raspistill</span> <span class="at">-o</span> /home/<span class="va">$USER</span>/test.jpg</span></code></pre></div></li>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="raspberry-pi-zero-wcamera-setup.html#cb9-1" tabindex="-1"></a><span class="ex">raspistill</span> <span class="at">-o</span> /home/<span class="va">$USER</span>/test.jpg</span></code></pre></div></li>
 <li><p>Modify permissions of the camera: <code>sudo chmod777 /dev/vchiq</code></p></li>
 </ol>
 <p>A Linux reader is required to read the Raspian imaged SD card, when plugged into a Windows PC. <a href="https://www.diskinternals.com/linux-reader/">Linux Reader</a> is a free option. Instructions can be found <a href="https://raspberrytips.com/read-raspberry-pi-sd-card-windows/">here</a>.</p>

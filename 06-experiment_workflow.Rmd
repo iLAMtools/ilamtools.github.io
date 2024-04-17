@@ -50,4 +50,4 @@
 **Tips:**
   
   - On average, a .jpg image captured by an iLAM requires 2.3-3.0 MB storage.
-  - If images are captured every 2 min x 7 days, then est. 11.6-15.1 GB storage required/iLAM Pi
+  - If images are captured every 2 min x 7 days, then est. 11.6-15.1 GB storage required/iLAM
