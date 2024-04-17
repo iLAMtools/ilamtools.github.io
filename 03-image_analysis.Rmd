@@ -1,13 +1,12 @@
 # Post-Process Image Segmentation
 
-Below is a walk-through for the post-process image segmentation (i.e., blob identification) of iLAM images to identify movements 
+Below is a walk-through for the post-process image segmentation (i.e., blob identification) of iLAM images to identify movements
 
 **1. Organize your file directory structure in a logical, hierarchical structure**
 
-  - Universal iLAM functions are within ```~/iLAM/scripts/``` or can be downloaded from this zip folder here: `r {xfun::embed_dir("./ilam_scripts/", text='iLAM wrapper functions')}`
-  - ```~/iLAM/exp_a/``` contains images, metadata, and analysis scripts specific to Experiment A
-  - Experiment A's images from ilam_01 and ilam_02 are saved in ```~/iLAM/exp_a/ilam_01/``` and ```~/iLAM/exp_a/ilam_02/```, respectively
-  - CSV output containing the size, location, and timing of all blobs/movements for each iLAM cages for Experiment A (i.e., ilam_01 and ilam_02):```~/iLAM/exp_a/iLAM_exp_a.txt/```, with corresponding metadata: ```~/iLAM/exp_a/metadata_exp_a.csv/```
+-   `~/iLAM/exp_a/` contains images, metadata, and analysis scripts specific to Experiment A
+-   Experiment A's images from ilam_01 and ilam_02 are saved in `~/iLAM/exp_a/ilam_01/` and `~/iLAM/exp_a/ilam_02/`, respectively
+-   .CSV output containing the size, location, and timing of all blobs/movements for each iLAM cages for Experiment A (i.e., ilam_01 and ilam_02):`~/iLAM/exp_a/iLAM_exp_a.txt/`, with corresponding metadata: `~/iLAM/exp_a/metadata_exp_a.csv/`
 
 ```{r, fig.cap='Directory structure for iLAM analysis', echo=FALSE}
 
@@ -46,45 +45,46 @@ mytree <- data.tree::as.Node(data.frame(pathString = path))
 print(mytree)
 ```
 
-**2. Perform image segmentation to identify movements across images taken by each iLAM (exp_a_ilam01.R, exp_a_ilam02.R, etc.)**
+**2. Install** [iLAMtools](https://github.com/daytonjn/iLAMtools) **from GitHub**
 
+``` r
+library(devtools)
+devtools::install_github("daytonjn/iLAMtools", force=TRUE)
+library(iLAMtools)
+```
+
+Alternatively, you may download iLAM functions from this zip folder: `r {xfun::embed_dir("./ilam_scripts/", text='iLAM wrapper functions')}` and reference them with 'source()'
+
+**2. Perform image segmentation to identify movements across images taken by each iLAM (exp_a_ilam01.R, exp_a_ilam02.R, etc.)**
 
 ```{r bb, fig.cap='Image segmentation workflow', echo=FALSE, fig.show='hold',fig.align='left'}
 knitr::include_graphics("images/segmentation_workflow.png")
 ```
 
-  - Load required packages and iLAM functions
-```
- library(imager)
- library(tidyverse)
- library(reshape2)
- library(dplyr)
- library(plyr)
- library(lubridate)
- library(readr)
- library(stringr)
- library(plotrix)
+-   Load required packages and iLAM functions
 
+```         
 setwd("/~/iLAM/exp_a/")
-
- #read in iLAM functions
- for (f in list.files("../scripts", pattern="*.R",
-                      full.names = TRUE)) {
-   source(f)
-
+library(iLAMtools)
 ```
 
-  - Update and tailor values for every cage and/or experiment; these values are recorded to metadata output and used as input settings for the *find_movements()* iLAM wrapper function:
-    - **Cage-Specific:** Integer coordinates for image cropping (x_left, x_right, y_bot, y_top)
-    - **Experiment-Specific:**
-      - *n_thr:* Numeric threshold percentile; higher values indicate a more stringent filtering. e.g., at n_thr=0.999, only the darkest pixel differences >99.9% are retained for blob identification (default: n_thr = 0.996)
-      - *n_cln:* Integer value to clean up pixels; e.g., at n_cln = 5, this first "shrinks" to remove all isolated blobs smaller than 5 pixels, and then "grows" remaining blobs by 5\*n_grw pixels to aggregate nearby blobs with each other. (default: n_cln = 5, n_grw = 1.5)
-      - *genus:* Character string for study organism
-      - *species:* Character string for study organism
-      - *color:* Character string to indicate whether the study organism appears "white" or "black" on the background 
-      - For more information on threshold, clean, blur, etc., see [imager documentation](https://dahtah.github.io/imager/) for more details.
-      
-```
+-   Update and tailor values for every cage and/or experiment; these values are recorded to metadata output and used as input settings for the *find_movements()* iLAM wrapper function:
+    -   **Cage-Specific:** Integer coordinates for image cropping (x_left, x_right, y_bot, y_top)
+    -   **Experiment-Specific:**
+        -   *n_thr:* Numeric threshold percentile; higher values indicate a more stringent filtering. e.g., at n_thr=0.999, only the darkest pixel differences \>99.9% are retained for blob identification (default: n_thr = 0.996)
+            -   Note: For moths (*O. nubilalis*, *H. zea*, *S. frugiperda*), we use: n_thr=0.999
+            -   Note: For beetles (*Photinus* species, *H. axyridus*), we use: n_thr=0.999
+        -   *n_cln:* Integer value to clean up pixels: e.g., at n_cln = 5, this first "shrinks" to remove all isolated blobs smaller than 5 pixels, and then "grows" remaining blobs by 5\*n_grw pixels to aggregate nearby blobs with each other. (default: n_cln = 5, n_grw = 1.5)
+            -   Note: For moths (*O. nubilalis*, *H. zea*, *S. frugiperda*), we use: n_cln=10, n_grw=1.5
+            -   Note: For beetles (*Photinus* species, *H. axyridus*), we use: n_cln=10, n_grw=1.5
+        -   *genus:* Character string for study organism
+        -   *species:* Character string for study organism
+        -   *color:* Character string to indicate whether the study organism appears "white" or "black" on the background
+            -   Note: For moths (*O. nubilalis*, *H. zea*, *S. frugiperda*), we use: "white"
+            -   Note: For beetles (*Photinus* species), we use: "black"
+        -   For more information on threshold, clean, blur, etc., see [imager documentation](https://dahtah.github.io/imager/) for more details.
+
+```         
 pi_sub_folder <- "ilam01"
 sex <- "male" #cage/project-specific
 
@@ -106,34 +106,35 @@ species = "marginellus" #project-specific
 animal = "black" #project-specific, during the night, does the animal appear "white" on a dark background or "black" on a light background? This is VERY important (!) because it determines whether "movements" identify insects whom left vs. arrived between frames 
 ```
 
-  - Create a vector of .jpg image file names to be analyzed
-  
-```
+-   Create a vector of .jpg image file names to be analyzed
+
+```         
 file_names <- list.files(pi_sub_folder,
                          pattern= "*.jpg",
                          full.names = TRUE)
 ```
 
-*We identify cropping locations that remove the outer edges of the cage, and maintain a constant picture area across all iLAMs (e.g., 1800x1600 pixels) with the following command:*
+We identify cropping locations that remove the outer edges of the cage, and maintain a constant picture area across all iLAMs (e.g., 1800x1600 pixels) with the following command:
 
-``` 
+```         
 load.image(file_names[1]) %>%
 imsub(x %inr% c(x_left,x_right), y %inr% c(y_bot,y_top)) %>% plot()
 ```
 
-  - Find all movements by image subtraction, global thresholding, and blob detection in the iLAM wrapper function ```find_movements()```. 
-  
+-   Find all movements by image subtraction, global thresholding, and blob detection in the iLAM wrapper function `find_movements()`.
+
     -Additional *optional* settings:
-      - *n_blr:* Integer value to set blur radius to denoise image and reduce graininess, prior to image subtraction (default: n_blr = 3)
-      - *n_grw:* Integer value for n_cln multiplier to "grow" and aggregate blobs within a given proximity. For example, when n_cln=5 and n_grw = 1.5, blobs are first shrunk by 5 pixels and then grown by 5x1.5=7.5 pixels (default: n_grw = 1.5)
-      - *n_max:* Integer value denoting the maximum number of pixel differences expected between two images; any values above this n_max will be considered as noisy and assigned an arbitrary value for subsequent filtering/removal. See \@ref(04-make_dam_output.Rmd) for more information.   Example, if a moth movement = 3000 pixels and there are five moths in a cage, then the maximum number of differences expected is 15,000 pixels. (default: n_max = 75000)
-      - *find_thr:* Boolean value "T" (true) or "F" (false) to determine what pixel value cut-off corresponds to the n_thr percentile difference across a p_sample of image comparisons (default = "T")
-      - *type_thr:* String value "absolute" or "relative" indicating whether to perform absolute  (capture all differences > n_thr for all pictures) or relative thresholding procedure (capture all differences > n_thr for each comparison) on set of images. We recommend the default, "absolute" option because the latter identifies false movements in images where there are no movements because it always retains the top pixel differences. (default: find_thr = "absolute")
-      - *p_sample:* Numeric value denoting the proportion of image comparisons that should be used to determine the absolute threshold valaue
-      - *channel:* String value denoting which color channel movements should be identified from (default: "grayscale")
-      
-      
-```
+
+    -   *n_blr:* Integer value to set blur radius to denoise image and reduce graininess, prior to image subtraction (default: n_blr = 3)
+    -   *n_grw:* Integer value for n_cln multiplier to "grow" and aggregate blobs within a given proximity. For example, when n_cln=5 and n_grw = 1.5, blobs are first shrunk by 5 pixels and then grown by 5x1.5=7.5 pixels (default: n_grw = 1.5)
+    -   *n_max:* Integer value denoting the maximum number of pixel differences expected between two images; any values above this n_max will be considered as noisy and assigned an arbitrary value for subsequent filtering/removal. See \@ref(04-make_dam_output.Rmd) for more information. Example, if a moth movement = 3000 pixels and there are five moths in a cage, then the maximum number of differences expected is 15,000 pixels. (default: n_max = 75000)
+    -   *find_thr:* Boolean value "T" (true) or "F" (false) to determine what pixel value cut-off corresponds to the n_thr percentile difference across a p_sample of image comparisons (default = "T")
+    -   *type_thr:* String value "absolute" or "relative" indicating whether to perform absolute (capture all differences \> n_thr for all pictures) or relative thresholding procedure (capture all differences \> n_thr for each comparison) on set of images. We recommend the default, "absolute" option because the latter identifies false movements in images where there are no movements because it always retains the top pixel differences. (default: find_thr = "absolute")
+    -   *p_sample:* Numeric value denoting the proportion of image comparisons that should be used to determine the absolute threshold value
+        -   Note: If 5% of the total images is \<100, then increasing p_sample \>0.05 is recommended
+    -   *channel:* String value denoting which color channel movements should be identified from (default: "grayscale")
+
+```         
 out <- find_movements(files = file_names, # list of file names 
                       n_thr = n_thr,      # threshold value (0.992 == "0.8%")
                       n_cln = n_cln,      # value for cleaning (number of pixels)
@@ -151,9 +152,9 @@ out <- find_movements(files = file_names, # list of file names
                       animal = animal)
 ```
 
-  - Update and save output containing all identified blobs, their size and location as a .csv in the current working directory.
+-   Update and save output containing all identified blobs, their size and location as a .csv in the current working directory.
 
-```
+```         
 #adds additional columns to dataframe
 out$ID <- paste0(n_thr*100,"%_", "s", n_cln, "g", 1.5*n_cln)
 out$sex <- sex
@@ -172,21 +173,26 @@ if (file.exists(paste0(out_file_name,".csv"))){
 rm(out)
 ```
 
-  - Use ```plot_movements()``` to visualize movements by plotting detected blobs onto a subset of images
-```
+-   Use `plot_movements()` to visualize movements by plotting detected blobs onto a subset of images
+
+```         
 #circles in bottom left corner denote standards of sizes: 12.8k px, 3.2k px, 800 px, 200 px, 50 px
-plot_movements(pi_sub_folder,
+plot_movements(file_names,pi_sub_folder,
                by_change,
                x_left, x_right,
-               y_bot, y_top)
+               y_bot, y_top,
+               n_max)
 ```
+
 ```{r j, fig.cap='iLAM plot_movements() image', echo=FALSE, fig.show='hold',fig.align='center'}
 knitr::include_graphics("images/ilam_plot_movement.jpg")
 ```
 
-  - If desired, make a gif from plotted images with  ```make_gif() ```
- 
-```
+-   If desired, make a gif from plotted images with `make_gif()`
+
+```         
+library(magick)
+
 make_gif(out_file_name,
           pi_sub_folder)
 ```
@@ -195,10 +201,8 @@ make_gif(out_file_name,
 knitr::include_graphics("images/ilam_photinus.gif")
 ```
 
-  **Tips:**
-  
-- First test parameters settings for ```find_movements()``` with a subset of experimental images: e.g.,  ```find_movements(files = file_names[1:100]) ```
-- If ```find_movements()``` crashes, returns excess small blobs/movements, and/or returns excess blobs/movements that do NOT correspond to REAL movements, then increase the n_thr or p_sample values. If this issue continues, then remove any days at the experiment end where all/most insects have died; this can downwardly bias the # of pixel differences expected across images. 
-- If ```find_movements()``` returns many small blobs/animal and you desire one blob/animal movement, then increase the n_cln and/or n_grw values
+**Tips:**
 
-
+-   First test parameters settings for `find_movements()` with a subset of experimental images: e.g., `find_movements(files = file_names[1:100], p_sample=0.9)`
+-   If `find_movements()` crashes, returns excess small blobs/movements, and/or returns excess blobs/movements that do **NOT** correspond to REAL movements, then increase the *n_thr* or *p_sample* values. If this issue continues, then remove any days at the experiment end where all/most insects have died; this can downwardly bias the average number of pixel differences expected across images.
+-   If `find_movements()` returns many small blobs/animal and you desire one blob/animal movement, then increase *n_cln* and/or *n_grw*

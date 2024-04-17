@@ -1,4 +1,4 @@
---- 
+---
 title: "iLAM: imaging Locomotor Activity Monitor"
 author: "Jacob Dayton & Avalon Owens"
 date: "`r Sys.Date()`"
@@ -11,20 +11,21 @@ description: "This is the documentation for the iLAM project, a monitor to quant
 ---
 
 # Description
-  Historically, most insect chronoecological research uses direct observations, cameras, and/or infrared beam-based monitors to quantify movement across timed intervals. Although many systems are cheaper than the traditional infrared locomotor activity monitors (e.g., DAM/LAM), these options remain complicated to build and/or computationally intensive.  
-  
-  We developed the **imaging Locomotor Activity Monitor (iLAM)**, an affordable system for activity quantification. The iLAM utilizes a [Raspberry Pi Zero W](https://www.raspberrypi.com/products/raspberry-pi-zero-w/) computer and night-vision camera inside a flight cage to regularly photograph a population of insects at user-defined intervals.
-  
-  Customizable, modular R-scripts process consecutive images with [*imager*](https://cran.r-project.org/web/packages/imager/) and output a file containing the *number*, *size*, *location*, and *timing* of all identified movements. Movement data can be converted into DAM format or directly analyzed within the [*Rethomics*](https://rethomics.github.io/) *framework*. 
+
+Historically, most insect chronoecological research has used direct observations, cameras, and/or infrared beam-based monitors to quantify movement across timed intervals. Although many systems are cheaper than the traditional infrared locomotor activity monitors (e.g., DAM/LAM), these options can remain complicated to build, computationally intensive to setup/process, and/or unable to accommodate large-bodied insects (i.e., not *Drosophila*).
+
+To fill this gap, we developed the affordable, **imaging Locomotor Activity Monitor (iLAM)** for activity quantification. The iLAM utilizes a [Raspberry Pi Zero W](https://www.raspberrypi.com/products/raspberry-pi-zero-w/) computer and night-vision camera inside a flight cage to regularly photograph a population of insects at user-defined intervals.
+
+Customizable, modular R-scripts process consecutive images with [*imager*](https://cran.r-project.org/web/packages/imager/) and output a file containing the *number*, *size*, *location*, and *timing* of all identified movements. Movement data can be converted into DAM format or directly analyzed within the [*Rethomics*](https://rethomics.github.io/) framework.
+
+Out-of-the-box functions can be downloaded and installed from our [iLAMtools](https://github.com/daytonjn/iLAMtools) repository.
 
 ```{r x, fig.cap='iLAM Workflow', echo=FALSE, fig.show='hold',fig.align='center'}
 knitr::include_graphics("images/ilam_workflow.png", error=FALSE)
 ```
 
-
 ```{r v, fig.cap='Representative firefly movements identified by iLAM system',echo=FALSE, fig.show='hold',fig.align='center'}
 knitr::include_graphics("images/ilam_photinus.gif", error=FALSE)
 ```
 
-  This documentation provides instructions for (1) iLAM construction, (2) Raspberry Pi setup, (3) Image analysis in R, (4) Conversion of iLAM output to DAM format in R, and (5) Example results from Rethomics.
-
+This resource provides detailed instructions for (1) iLAM construction, (2) Raspberry Pi setup, (3) Image analysis in R, (4) conversion of iLAM output to DAM format in R, and (5) Sample results using Rethomics.

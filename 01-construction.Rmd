@@ -1,7 +1,8 @@
 # Flight Cage Construction
-  The paired iLAM flight cages described in our original publication used the following materials:
-  
-```{r y, fig.cap='iLAM Materials', echo=FALSE, results=FALSE}
+
+The paired iLAM flight cages described in our original publication used the following materials:
+
+```{r y, fig.cap='iLAM Materials', echo=FALSE, quiet=TRUE}
 library(knitr)
 library(readr)
 
@@ -11,28 +12,31 @@ materials_ilam <- read_csv("data/materials_ilam.csv",
 knitr::kable(materials_ilam, error=FALSE, caption = "iLAM materials")
 
 ```
+
 *All materials were purchased from local hardware stores, art supply chains, Raspberry Pi suppliers, and Amazon*
 
-  The three cage levels were made with the following cuts:
+The three cage levels were made with the following cuts:
 
-- Top: 31 1/2" x 10 1/2"
-    - Two Circles: 13 3/8" diameter (<14" hoop)
-- Bottom: 31 1/2" x 10 1/2"
-    - Two Circles: 7 1/2" diameter (<8" hoop)
-    - Hole for camera ribbon
-- Base: 31 1/2" x 10 1/2"
+-   Top: 31 1/2" x 10 1/2"
+    -   Two Circles: 13 3/8" diameter (\<14" hoop)
+-   Bottom: 31 1/2" x 10 1/2"
+    -   Two Circles: 7 1/2" diameter (\<8" hoop)
+    -   Hole for camera ribbon
+-   Base: 31 1/2" x 10 1/2"
 
 ```{r z, fig.cap='iLAM flight cage: front view', echo=FALSE, fig.show='hold',fig.align='left'}
 knitr::include_graphics("images/ilam_in_triangle.jpg")
 ```
 
-
 ```{r a, fig.cap='iLAM flight cage: top-down view', echo=FALSE, fig.show='hold',fig.align='left'}
 knitr::include_graphics("images/ilam_interior.jpg")
 ```
 
-  **Tips:**
-  
-- Cups with moist sponges and a falcon tube with a cotton roll and water (held by velcro) increased the lifespan of experimental insects
-- Duct-tape around the camera ribbon cable hole and camera prevented escape by small experimental insects (e.g., *Photinus* species)
-- Depending on the insect's color under IR (i.e., white vs. black appearance), change the background of the lid (i.e., white vs. black) to maximize contrast 
+**Tips:**
+
+-   To increase the lifespan of experimental insects and the experiment's recording duration, add cups with moist sponges and a falcon tube with a cotton roll and water (held by Velcro)
+-   To prevent escape by small experimental insects (e.g., *Photinus* species), add duct-tape around the camera ribbon cable hole and camera
+-   Depending on the color that the study insect appears under infrared light (i.e., white vs. black appearance), change the background of the lid to maximize contrast
+-   To minimize differences in the photographed light environment throughout light:dark/dark:light transitions, we now:
+    -   Cover the Raspberry Pi's light sensors with black duct tape or plastic; this "tricks" the Pi to keep it's infrared lights on 24/7
+    -   Cover the Raspberry Pi's camera lens with a [narrow longpass filter](https://www.edmundoptics.com/p/780nm-127mm-dia-colored-glass-replacement-longpass-filter/43186/) that only permits infrared light to the camera

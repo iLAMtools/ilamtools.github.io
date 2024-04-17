@@ -1,169 +1,197 @@
+---
+editor_options: 
+  markdown: 
+---
+
 # Raspberry Pi Zero w/Camera Setup
-  Steps to program the Raspberry Pi Zero computers to capture and store images:  
+
+Steps to program the Raspberry Pi Zero computers to capture and store images:
 
 **1. Obtain necessary cables/connectors:**
 
-  - USB 2.0 to microSD card reader (to image SD card on a PC)
-  - USB 2.0 microUSB male to USB female adapter (to connect keyboard with Pi)
-  - Keyboard with USB 2.0 wire
-  - Micro HDMI male to HDMI female adapter & HDMI cable (to connect monitor with Pi) or micro HDMI to HDMI cable
-  
-  
+-   USB 2.0 to microSD card reader (to image SD card on a PC)
+-   USB 2.0 microUSB male to USB female adapter (to connect keyboard with Pi)
+-   Keyboard with USB 2.0 wire
+-   Micro HDMI male to HDMI female adapter & HDMI cable (to connect monitor with Pi) or micro HDMI to HDMI cable
+
 **2. Install operating system:**
 
 ```{r aa, fig.cap='Raspberry Pi Imager', echo=FALSE, fig.show='hold',fig.align='left'}
 knitr::include_graphics("images/raspberry_pi_imager.png")
 ```
 
-
-  - Use microSD card reader to mount SD card onto a PC
-  - Download and open [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
-    - Choose OS → Raspberry Pi OS (Other) → Raspberry Pi OS Lite (32-bit)
-    - Choose Storage  → *Drive referring to microSD card*
-    - *Optional*: Gears →
-      - Set hostname (*name of the pi on your wifi network that you ssh [pi_name]@[IP Address] into*)
-      - Enable ssh
-      - Set username and password (*user login information to access the pi*)
-      - Set locale settings (*e.g., America/New York & us*)
-    - Write
-  - Disconnect and insert formatted microSD card into Pi
-  - Connect Pi to keyboard, monitor, and power source
-  - Once connected to power, Pi automatically turns on
+-   Use microSD card reader to mount SD card onto a PC
+-   Download and open [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
+    -   Choose OS → Raspberry Pi OS (Other) → Raspberry Pi OS Lite (32-bit)
+    -   Choose Storage → *Drive referring to microSD card*
+    -   *Optional*: Gears →
+        -   Set hostname (*name of the pi on your wifi network that you ssh [pi_name]\@[IP Address] into*)
+        -   Enable ssh
+        -   Set username and password (*user login information to access the pi*)
+        -   Set locale settings (*e.g., America/New York & us*)
+    -   Write
+-   Disconnect and insert formatted microSD card into Pi
+-   Connect Pi to keyboard, monitor, and power source
+-   Once connected to power, Pi automatically turns on
 
 **2. Login with default or already specified login information:**
 
-  - raspberrypi login: pi
-  - password: raspberry   
+-   raspberrypi login: pi
+-   password: raspberry
 
-**3. Configure Pi settings:** ```sudo raspi-config```
+**3. Configure Pi settings:** `sudo raspi-config`
 
-  - Use arrow keys and Enter to navigate
-  - 1 → S1  Connect to wifi  
-    - SSID: wifi network name
-    - Passphrase: wifi password
-  - 1 → S3  change pi password
-  - 1 → S4  change pi name (not login)
-  - 3 → I1  enable camera attachment
-  - 3 → I2  enable remote access (```ssh```)
-  - 5 → L2  set timezone
-  - Finish (type ```y``` when asked if you want to reboot)
+-   Use arrow keys and Enter to navigate
+-   1 → S1 Connect to wifi
+    -   SSID: wifi network name
+    -   Passphrase: wifi password
+-   1 → S3 change pi password
+-   1 → S4 change pi name (not login)
+-   3 → I1 enable camera attachment
+-   3 → I2 enable remote access (`ssh`)
+-   5 → L2 set timezone
+-   Finish (type `y` when asked if you want to reboot)
 
-**4. Add static IP address for remote access:**
-  https://raspberrypi-guide.github.io/networking/set-up-static-ip-address
+**4. Add static IP address for remote access:** <https://raspberrypi-guide.github.io/networking/set-up-static-ip-address>
 
 **5. Continue programming directly or remotely access the Pi through terminal from another PC:**
 
-```
+```         
 ssh login_name@[IP address]
 password:
 ```
-  
-**6. Make a folder/directory named 'still' to hold images: **
-```mkdir still_[xxx]```
 
-  - *Note: [xxx] refers to the login name of the Raspberry Pi associated with the iLAM*
+**6. Make a folder/directory named 'still' to hold images:** `mkdir still_[xxx]`
 
-**7. Make a directory named script to hold scripts: **
-```mkdir script_[xxx]``` 
-  
-**8. Write a script using a text-editor (e.g., nano) named still_[xxx].sh:**
-  ```sudo nano ./script_[xxx]/still_[xxx].sh``` and write the following text:
-  
-```
+-   *Note: [xxx] refers to the login name of the Raspberry Pi associated with the iLAM*
+
+**7. Make a directory named script to hold scripts:** `mkdir script_[xxx]`
+
+**8. Write a script using a text-editor (e.g., nano) named still\_[xxx].sh:** `sudo nano ./script_[xxx]/still_[xxx].sh` and write the following text:
+
+```         
 #!/bin/bash
 DATE=$(date +"%m%d.%H%M")
 sudo raspistill -o /home/$USER/still_$USER/$USER.$DATE.jpg
 ```
- - This script will take images and save them along w/ metadata into the still_$USER directory: (1) necessary part of any bash file with instructions, (2) how to format the date and time in the file name, (3) command for pi to take a photo and store it with specified file name/location. 
-  - Hit ```control^X``` to exit (type ```y``` when asked if you want to save)
 
-**9. To automatically upload/copy images into a remote directory, (a) upload each image after it's taken, or (b) mount a remote directory.**
+-   This script will take images and save them along w/ metadata into the still\_\$USER directory:
+    -   (Line 1) necessary for any bash file with instructions
+    -   (Line 2) sets the format for the date and time in the file name
+    -   (Line 3) command for pi to take a photo and store it with specified file name/location.
+-   Hit `control^X` to exit (type `y` when asked if you want to save)
 
-  - ```ssh-keygen``` and ```ENTER``` to generate a new SSH key to enable a custom script to automatically upload images without requiring a password input
-  - ```ssh-copy-id -i ~/.ssh/id_rsa [remote_PC_hostname]@[remote_PC IP address]```
-  - Input password for remote_PC
-  - a. Add following line to the still_[xxx].sh
-    - ```nano ./script_[xxx]/still_[xxx].sh```
-    - ```scp /home/$USER/still_$USER/$USER.$DATE.jpg [remote_PC_hostname]@[remote_PC IP address]:[directory that you want images saved into]/```
+**9. To automatically upload/copy images into a remote directory, you may (A) use scp to upload each image after it's taken, or (b) mount a remote directory and then copy each image.**
 
-  - b. If mounting Raspberry Pi Zero W images into a remote directory, then repeat the same steps for mount_[xxx].sh:**
-        ```
-        #!/bin/bash
-        DATE=$(date +"%m%d.%H%M")
-        sleep 10s
-        cp /home/$USER/still_$USER/$USER.$DATE.jpg /home/$USER/mount_$USER/
-        ```
-        
+-   `ssh-keygen` and `ENTER` to generate a new SSH key to enable a custom script to automatically upload images without requiring a password input
+
+-   `ssh-copy-id -i ~/.ssh/id_rsa [remote_PC_hostname]@[remote_PC IP address]`
+
+-   Input password for remote_PC
+
+-   Option A: Add the following line to the end of still\_[xxx].sh:
+
+``` bash
+scp /home/$USER/still_$USER/$USER.$DATE.jpg [remote_PC_hostname]@[remote_PC IP address]:[directory that you want images saved into]/
+```
+
+-   Option B: Add the following lines to the end of still\_[xxx].sh:
+
+``` bash
+sleep 10
+scp /home/$USER/still_$USER/$USER.$DATE.jpg /home/$USER/mount_$USER/
+```
+
 **10. Schedule the imaging script to run periodically with crontab:**
 
-  - Access the crontab file
-```
+-   Access the crontab file
+
+```         
 sudo crontab -e
 ```
-  - Select the first option to edit the crontab in nano
-  - Copy the following to the bottom of the file:
-```
+
+-   Select the first option to edit the crontab in nano
+-   Copy the following to the bottom of the file:
+
+``` bash
 */2 *  *   *   * sh /home/$USER/script_$USER/still_$USER.sh 2>&1
 ```
-  This tells the pi to execute the still.sh file every 2 minutes 
-  (the order is minute, hour, day of month, month, day of week). When setting up a new crontab, always run it past [*crontab.guru*](https://crontab.guru/)!
-  
-  - ```control^X``` to exit (type y when asked if you want to save)
-  - If you are mounting to a remote directory [9a], you will also want to add this line
-```
-#if mounting files to a remote directory, add this line which copies (uploads) the still file from your pi to a remote database
-*/2 *  *   *   * sh /home/$USER/script_$USER/mount_$USER.sh 
-```
 
-**Accessing Raspberry Pi image files on your PC:**
+-   This tells the pi to execute the still.sh file every 2 minutes (the order is minute, hour, day of month, month, day of week). When setting up a new crontab, always run it past [*crontab.guru*](https://crontab.guru/)!
 
-  - a. Download images via Command line
-    - Log in to the Linux/Powershell on your laptop
-    - ```scp pi@[IP address]:~/still_[xxx]/*.jpg ~/[target directory]```
-  - b. Download images with a free file transfer program (FTP) like [FileZilla](https://filezilla-project.org/)
-    - In *Site Manager*, choose *New site*
-    - Protocol: SFTP - SSH File Transfer Protocol
-    - Host: [IP Address of Raspberry Pi]
-    - Logon Type: *Normal*
-    - User: [Pi login name]
-    - Password: [Pi login password]
-    - *Connect*
+-   `control^X` to exit (type y when asked if you want to save)
+
+**11. Access Raspberry Pi image files on your PC:**
+
+-   Even if your iLAM/Pi is programmed to upload files to a remote computer over Wifi, at the end of every experiment, we recommend verifying that all images were properly uploaded/transferred. To remotely download images, you may:
+
+-   Option A: Download images via Command line
+
+    -   Log in to the Linux/Powershell on your laptop
+
+        ``` bash
+        scp pi@[IP address]:~/still_[xxx]/*.jpg ~/[target directory]`
+        ```
+
+-   Option B: Download images via a free file transfer program (FTP) like [FileZilla](https://filezilla-project.org/)
+
+    -   Open FileZilla: In *Site Manager*, choose *New site*
+
+    -   Protocol: SFTP - SSH File Transfer Protocol
+
+    -   Host: [IP Address of Raspberry Pi]
+
+    -   Logon Type: *Normal*
+
+    -   User: [Pi login name]
+
+    -   Password: [Pi login password]
+
+    -   Connect
 
 **Trouble-shooting**
-  - raspistill will not take a picture and returns** ```*failed to open vchiq instance```:
-    1. Verify that the camera is connected and the ribbon cable is not damaged:
-      ```vcgencmd get_camera```
-    2. Determine if the camera or the still_[xxx].sh script is the issue:
-      ```raspistill -o /home/$USER/test.jpg```
-    3. Modify permissions of the camera:
-      ```sudo chmod777 /dev/vchiq```
+
+-raspistill will not take a picture and returns\*\* `*failed to open vchiq instance`:
+
+1.  Verify that the camera is connected and the ribbon cable is not damaged:
+
+    ``` bash
+    vcgencmd get_camera
+    ```
+
+2.  Determine if the camera or the still\_[xxx].sh script is the issue:
+
+    ``` bash
+    raspistill -o /home/$USER/test.jpg
+    ```
+
+3.  Modify permissions of the camera: `sudo chmod777 /dev/vchiq`
 
 A Linux reader is required to read the Raspian imaged SD card, when plugged into a Windows PC. [Linux Reader](https://www.diskinternals.com/linux-reader/) is a free option. Instructions can be found [here](https://raspberrytips.com/read-raspberry-pi-sd-card-windows/).
 
-  **Tips:**
-  
-- Useful Linux commands:
+**Tips:**
 
-  - \*				wildcard (e.g. `*.jpg` == all jpeg files)
-  - ```control^A``` 		bring cursor to beginning of line
-  - ```control^E```		bring cursor to end of line
-  - ```control^C```		kill process
-  - ```clear``` 			clear all previous text from terminal
-  - ```ls```  			list all contents in current folder
-  - ```cd directory_path```  	change to named folder
-  - ```cd ~```			go to home directory
-  - ```cd ..``` 			go up one folder level
-  - ```cd -```  			go back to last folder
-  - ```mkdir dir_name```  	create EMPTY folder (directory)
-  - ```rmdir dir_name```  	remove EMPTY folder
-  - ```rm file_name```  		remove a file
-  - ```rm -f file_name```  	remove a file without asking for permission
-  - ```rm -r dir_name```  	recursively remove all files from folder
-  - ```rm -rf dir_name```  	forcefully remove all files from folder
-  - ```ren name_1 name_2``` 	rename something to something else
-  - ```cp file_1 file_2```  	copy file_1 to file_2, creates duplicate. *note*: if file_2 exists will overwrite (NO warning)
-  - ```cp -r dir_1 dir_2``` 	copy folder and its contents
-  - ```nano file_name```  	make named file and open text editor
-  - ```sudo reboot		reboot pi``` 
-  - ```sudo shutdown now```	safely shutdown pi (reboots when plugged in again)
+-   Useful Linux commands:
 
+    -   \* wildcard (e.g. `*.jpg` == all jpeg files)
+    -   `control^A` bring cursor to beginning of line
+    -   `control^E` bring cursor to end of line
+    -   `control^C` kill process
+    -   `clear` clear all previous text from terminal
+    -   `ls` list all contents in current folder
+    -   `cd directory_path` change to named folder
+    -   `cd ~` go to home directory
+    -   `cd ..` go up one folder level
+    -   `cd -` go back to last folder
+    -   `mkdir dir_name` create EMPTY folder (directory)
+    -   `rmdir dir_name` remove EMPTY folder
+    -   `rm file_name` remove a file
+    -   `rm -f file_name` remove a file without asking for permission
+    -   `rm -r dir_name` recursively remove all files from folder
+    -   `rm -rf dir_name` forcefully remove all files from folder
+    -   `ren name_1 name_2` rename something to something else
+    -   `cp file_1 file_2` copy file_1 to file_2, creates duplicate. *note*: if file_2 exists will overwrite (NO warning)
+    -   `cp -r dir_1 dir_2` copy folder and its contents
+    -   `nano file_name` make named file and open text editor
+    -   `sudo reboot      reboot pi`
+    -   `sudo shutdown now` safely shutdown pi (reboots when plugged in again)

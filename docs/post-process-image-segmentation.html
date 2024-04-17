@@ -23,7 +23,7 @@
 <meta name="author" content="Jacob Dayton &amp; Avalon Owens" />
 
 
-<meta name="date" content="2024-04-15" />
+<meta name="date" content="2024-04-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -54,6 +54,70 @@
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 <style type="text/css">
   
@@ -107,10 +171,9 @@
 <p>Below is a walk-through for the post-process image segmentation (i.e., blob identification) of iLAM images to identify movements</p>
 <p><strong>1. Organize your file directory structure in a logical, hierarchical structure</strong></p>
 <ul>
-<li>Universal iLAM functions are within <code>~/iLAM/scripts/</code> or can be downloaded from this zip folder here: <a href="data:application/zip;base64,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" download="ilam_scripts.zip">iLAM wrapper functions</a></li>
 <li><code>~/iLAM/exp_a/</code> contains images, metadata, and analysis scripts specific to Experiment A</li>
 <li>Experiment A’s images from ilam_01 and ilam_02 are saved in <code>~/iLAM/exp_a/ilam_01/</code> and <code>~/iLAM/exp_a/ilam_02/</code>, respectively</li>
-<li>CSV output containing the size, location, and timing of all blobs/movements for each iLAM cages for Experiment A (i.e., ilam_01 and ilam_02):<code>~/iLAM/exp_a/iLAM_exp_a.txt/</code>, with corresponding metadata: <code>~/iLAM/exp_a/metadata_exp_a.csv/</code></li>
+<li>.CSV output containing the size, location, and timing of all blobs/movements for each iLAM cages for Experiment A (i.e., ilam_01 and ilam_02):<code>~/iLAM/exp_a/iLAM_exp_a.txt/</code>, with corresponding metadata: <code>~/iLAM/exp_a/metadata_exp_a.csv/</code></li>
 </ul>
 <pre><code>## Warning: package &#39;data.tree&#39; was built under R version 4.3.3</code></pre>
 <pre><code>##                           levelName
@@ -141,6 +204,11 @@
 ## 25      ¦--make_gif.R              
 ## 26      ¦--parse_movements.R       
 ## 27      °--plot_movements.R</code></pre>
+<p><strong>2. Install</strong> <a href="https://github.com/daytonjn/iLAMtools">iLAMtools</a> <strong>from GitHub</strong></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="post-process-image-segmentation.html#cb14-1" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
+<span id="cb14-2"><a href="post-process-image-segmentation.html#cb14-2" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;daytonjn/iLAMtools&quot;</span>, <span class="at">force=</span><span class="cn">TRUE</span>)</span>
+<span id="cb14-3"><a href="post-process-image-segmentation.html#cb14-3" tabindex="-1"></a><span class="fu">library</span>(iLAMtools)</span></code></pre></div>
+<p>Alternatively, you may download iLAM functions from this zip folder: <a href="data:application/zip;base64,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" download="ilam_scripts.zip">iLAM wrapper functions</a> and reference them with ‘source()’</p>
 <p><strong>2. Perform image segmentation to identify movements across images taken by each iLAM (exp_a_ilam01.R, exp_a_ilam02.R, etc.)</strong></p>
 <div class="figure" style="text-align: left"><span style="display:block;" id="fig:bb"></span>
 <img src="images/segmentation_workflow.png" alt="Image segmentation workflow" width="535" />
@@ -151,34 +219,31 @@ Figure 4.1: Image segmentation workflow
 <ul>
 <li>Load required packages and iLAM functions</li>
 </ul>
-<pre><code> library(imager)
- library(tidyverse)
- library(reshape2)
- library(dplyr)
- library(plyr)
- library(lubridate)
- library(readr)
- library(stringr)
- library(plotrix)
-
-setwd(&quot;/~/iLAM/exp_a/&quot;)
-
- #read in iLAM functions
- for (f in list.files(&quot;../scripts&quot;, pattern=&quot;*.R&quot;,
-                      full.names = TRUE)) {
-   source(f)
-</code></pre>
+<pre><code>setwd(&quot;/~/iLAM/exp_a/&quot;)
+library(iLAMtools)</code></pre>
 <ul>
 <li>Update and tailor values for every cage and/or experiment; these values are recorded to metadata output and used as input settings for the <em>find_movements()</em> iLAM wrapper function:
 <ul>
 <li><strong>Cage-Specific:</strong> Integer coordinates for image cropping (x_left, x_right, y_bot, y_top)</li>
 <li><strong>Experiment-Specific:</strong>
 <ul>
-<li><em>n_thr:</em> Numeric threshold percentile; higher values indicate a more stringent filtering. e.g., at n_thr=0.999, only the darkest pixel differences &gt;99.9% are retained for blob identification (default: n_thr = 0.996)</li>
-<li><em>n_cln:</em> Integer value to clean up pixels; e.g., at n_cln = 5, this first “shrinks” to remove all isolated blobs smaller than 5 pixels, and then “grows” remaining blobs by 5*n_grw pixels to aggregate nearby blobs with each other. (default: n_cln = 5, n_grw = 1.5)</li>
+<li><em>n_thr:</em> Numeric threshold percentile; higher values indicate a more stringent filtering. e.g., at n_thr=0.999, only the darkest pixel differences &gt;99.9% are retained for blob identification (default: n_thr = 0.996)
+<ul>
+<li>Note: For moths (<em>O. nubilalis</em>, <em>H. zea</em>, <em>S. frugiperda</em>), we use: n_thr=0.999</li>
+<li>Note: For beetles (<em>Photinus</em> species, <em>H. axyridus</em>), we use: n_thr=0.999</li>
+</ul></li>
+<li><em>n_cln:</em> Integer value to clean up pixels: e.g., at n_cln = 5, this first “shrinks” to remove all isolated blobs smaller than 5 pixels, and then “grows” remaining blobs by 5*n_grw pixels to aggregate nearby blobs with each other. (default: n_cln = 5, n_grw = 1.5)
+<ul>
+<li>Note: For moths (<em>O. nubilalis</em>, <em>H. zea</em>, <em>S. frugiperda</em>), we use: n_cln=10, n_grw=1.5</li>
+<li>Note: For beetles (<em>Photinus</em> species, <em>H. axyridus</em>), we use: n_cln=10, n_grw=1.5</li>
+</ul></li>
 <li><em>genus:</em> Character string for study organism</li>
 <li><em>species:</em> Character string for study organism</li>
-<li><em>color:</em> Character string to indicate whether the study organism appears “white” or “black” on the background</li>
+<li><em>color:</em> Character string to indicate whether the study organism appears “white” or “black” on the background
+<ul>
+<li>Note: For moths (<em>O. nubilalis</em>, <em>H. zea</em>, <em>S. frugiperda</em>), we use: “white”</li>
+<li>Note: For beetles (<em>Photinus</em> species), we use: “black”</li>
+</ul></li>
 <li>For more information on threshold, clean, blur, etc., see <a href="https://dahtah.github.io/imager/">imager documentation</a> for more details.</li>
 </ul></li>
 </ul></li>
@@ -208,7 +273,7 @@ animal = &quot;black&quot; #project-specific, during the night, does the animal 
 <pre><code>file_names &lt;- list.files(pi_sub_folder,
                          pattern= &quot;*.jpg&quot;,
                          full.names = TRUE)</code></pre>
-<p><em>We identify cropping locations that remove the outer edges of the cage, and maintain a constant picture area across all iLAMs (e.g., 1800x1600 pixels) with the following command:</em></p>
+<p>We identify cropping locations that remove the outer edges of the cage, and maintain a constant picture area across all iLAMs (e.g., 1800x1600 pixels) with the following command:</p>
 <pre><code>load.image(file_names[1]) %&gt;%
 imsub(x %inr% c(x_left,x_right), y %inr% c(y_bot,y_top)) %&gt;% plot()</code></pre>
 <ul>
@@ -220,7 +285,10 @@ imsub(x %inr% c(x_left,x_right), y %inr% c(y_bot,y_top)) %&gt;% plot()</code></p
 <li><em>n_max:</em> Integer value denoting the maximum number of pixel differences expected between two images; any values above this n_max will be considered as noisy and assigned an arbitrary value for subsequent filtering/removal. See @ref(04-make_dam_output.Rmd) for more information. Example, if a moth movement = 3000 pixels and there are five moths in a cage, then the maximum number of differences expected is 15,000 pixels. (default: n_max = 75000)</li>
 <li><em>find_thr:</em> Boolean value “T” (true) or “F” (false) to determine what pixel value cut-off corresponds to the n_thr percentile difference across a p_sample of image comparisons (default = “T”)</li>
 <li><em>type_thr:</em> String value “absolute” or “relative” indicating whether to perform absolute (capture all differences &gt; n_thr for all pictures) or relative thresholding procedure (capture all differences &gt; n_thr for each comparison) on set of images. We recommend the default, “absolute” option because the latter identifies false movements in images where there are no movements because it always retains the top pixel differences. (default: find_thr = “absolute”)</li>
-<li><em>p_sample:</em> Numeric value denoting the proportion of image comparisons that should be used to determine the absolute threshold valaue</li>
+<li><em>p_sample:</em> Numeric value denoting the proportion of image comparisons that should be used to determine the absolute threshold value
+<ul>
+<li>Note: If 5% of the total images is &lt;100, then increasing p_sample &gt;0.05 is recommended</li>
+</ul></li>
 <li><em>channel:</em> String value denoting which color channel movements should be identified from (default: “grayscale”)</li>
 </ul></li>
 </ul>
@@ -262,10 +330,11 @@ rm(out)</code></pre>
 <li>Use <code>plot_movements()</code> to visualize movements by plotting detected blobs onto a subset of images</li>
 </ul>
 <pre><code>#circles in bottom left corner denote standards of sizes: 12.8k px, 3.2k px, 800 px, 200 px, 50 px
-plot_movements(pi_sub_folder,
+plot_movements(file_names,pi_sub_folder,
                by_change,
                x_left, x_right,
-               y_bot, y_top)</code></pre>
+               y_bot, y_top,
+               n_max)</code></pre>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:j"></span>
 <img src="images/ilam_plot_movement.jpg" alt="iLAM plot_movements() image" width="900" />
 <p class="caption">
@@ -275,7 +344,9 @@ Figure 4.2: iLAM plot_movements() image
 <ul>
 <li>If desired, make a gif from plotted images with <code>make_gif()</code></li>
 </ul>
-<pre><code>make_gif(out_file_name,
+<pre><code>library(magick)
+
+make_gif(out_file_name,
           pi_sub_folder)</code></pre>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:k"></span>
 <img src="images/ilam_photinus.gif" alt="iLAM make_gif() output"  />
@@ -285,9 +356,9 @@ Figure 4.3: iLAM make_gif() output
 </div>
 <p><strong>Tips:</strong></p>
 <ul>
-<li>First test parameters settings for <code>find_movements()</code> with a subset of experimental images: e.g., <code>find_movements(files = file_names[1:100])</code></li>
-<li>If <code>find_movements()</code> crashes, returns excess small blobs/movements, and/or returns excess blobs/movements that do NOT correspond to REAL movements, then increase the n_thr or p_sample values. If this issue continues, then remove any days at the experiment end where all/most insects have died; this can downwardly bias the # of pixel differences expected across images.</li>
-<li>If <code>find_movements()</code> returns many small blobs/animal and you desire one blob/animal movement, then increase the n_cln and/or n_grw values</li>
+<li>First test parameters settings for <code>find_movements()</code> with a subset of experimental images: e.g., <code>find_movements(files = file_names[1:100], p_sample=0.9)</code></li>
+<li>If <code>find_movements()</code> crashes, returns excess small blobs/movements, and/or returns excess blobs/movements that do <strong>NOT</strong> correspond to REAL movements, then increase the <em>n_thr</em> or <em>p_sample</em> values. If this issue continues, then remove any days at the experiment end where all/most insects have died; this can downwardly bias the average number of pixel differences expected across images.</li>
+<li>If <code>find_movements()</code> returns many small blobs/animal and you desire one blob/animal movement, then increase <em>n_cln</em> and/or <em>n_grw</em></li>
 </ul>
 
 </div>

@@ -39,7 +39,7 @@
 **9. Store data:**
   
   - Sometimes, Wifi interruptions can prevent successful image upload. Verify that no images are missing from any Pis
-  - Directly download any missing images from Pis
+  - Directly download any outstanding images from Pis
   - Save images in directory for analysis
     
 **10. Identify movements by post-process image segmentation**

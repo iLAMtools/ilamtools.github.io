@@ -1,17 +1,14 @@
 # Analyze Movement Data
 
-In our research, we utilize the *Rethomics* framework for data analysis. A more detailed walk-through can be found in the original [*Rethomics*](https://doi.org/10.1371/journal.pone.0209331) publication and online [tutorial](https://rethomics.github.io/). 
+In our research, we utilize the *Rethomics* framework for data analysis. A more detailed walk-through can be found in the original [*Rethomics*](https://doi.org/10.1371/journal.pone.0209331) publication and online [tutorial](https://rethomics.github.io/).
 
 Some example transformations and visualizations of iLAM/DAM2 data are presented below:
 
+-   Read in metadata for experiment
 
-- Read in metadata for experiment
-
-```
+```         
 metadata_o = read_delim("metadata_onub.csv", delim = ";", escape_double = FALSE, trim_ws = TRUE)
-
 ```
-
 
 ```{r nn, fig.cap='iLAM Materials', quiet=TRUE, echo=FALSE}
 library(knitr)
@@ -25,70 +22,61 @@ knitr::kable(metadata_ilam, error=FALSE, caption = "iLAM metadata example")
 
 ```
 
+-   Link metadata with the iLAM files
 
-- Link metadata with the iLAM files
-
-```
+```         
 metadata_o = metadata_o %>% link_dam_metadata(result_dir = getwd())
 iLAM_onub <- load_dam(metadata_o) 
 summary(iLAM_onub)
-
 ```
 
-- Split data by identifiers
+-   Split data by identifiers
 
-```
+```         
 iLAM_BE = iLAM_onub[xmv(strain) == "be"]
-
 ```
 
-- Add unique identifier (uid) for specific identification for each cage/experiment/species
+-   Add unique identifier (uid) for specific identification for each cage/experiment/species
 
-```
+```         
 iLAM_BE[, uid := 1:.N, meta=T]
-
 ```
 
+-   For each timepoint, collapse rows/observations into 30 minute bins
+    -   The sum of every 15 rows; 15 = seq(0,14) = 30min bins
 
-- For each timepoint, collapse rows/observations into 30 minute bins
-  - The sum of every 15 rows; 15 = seq(0,14) = 30min bins
-  
-```
+```         
 iLAM_BE[, activity_bin := rollapply(activity, list(seq(0, 14)),
                                           FUN=function(x) sum(x, na.rm=TRUE),
                                           partial = TRUE, fill = NA),
               by = xmv(uid)]
-
 ```
 
-- For each uid, retain only the 15th row (t) = 30min bins
+-   For each uid, retain only the 15th row (t) = 30min bins
 
-```
+```         
 iLAM_BE = iLAM_BE[, .SD[seq(1, .N, 15)], by = id]
-
 ```
 
-- Calculate average activity across all bins to normalize activity_bins between cages
+-   Calculate average activity across all bins to normalize activity_bins between cages
 
-```
+```         
 iLAM_BE[, uid := 1:.N, meta=T]
 iLAM_BE[, fctr := .(10/mean(activity_bin)), by = xmv(uid)]
 iLAM_BE[, .N, by=xmv(uid)] #verify that proper number of bins were kept
 
 iLAM_BE[, .(mean_acti = 1/mean(activity_bin)), by=xmv(uid)]
-
 ```
 
-- Multiple activity_bin by normalization factor
+-   Multiple activity_bin by normalization factor
 
-```
+```         
 iLAM_BE[, acn := activity_bin*fctr]
-
 ```
 
-- Visualize average across individuals for first 72 hours
+-   Visualize average across individuals for first 72 hours
 
-```
+```         
 p_be_activity = ggetho(iLAM_BE, aes(y=acn, colour=sex), time_wrap = hours(25)) +
   stat_pop_etho(size=0.75) +
   stat_ld_annotations(l_duration = as.numeric(hours(16)),
@@ -112,7 +100,6 @@ p_be_activity = ggetho(iLAM_BE, aes(y=acn, colour=sex), time_wrap = hours(25)) +
   
 ```
 
-
 ```{r c, fig.cap='Activity of European corn borer moths in LD. Activity was captured by iLAM across three days of LD (A). Phase of peak activity (B) and percent activity that occured at night (C).', echo=FALSE, fig.show='hold',fig.align='center'}
 
 knitr::include_graphics("images/analysis_be.png", dpi = 10)
@@ -120,9 +107,8 @@ knitr::include_graphics("images/analysis_be.png", dpi = 10)
 
 **Tips:**
 
-There are **many** other useful R packages that can be leveraged to analyze locomotor activity data in the DAM2 format. Some examples are:  
+There are **many** other useful R packages that can be leveraged to analyze locomotor activity data in the DAM2 format. Some examples are:
 
-- [*Rtivity*](https://doi.org/10.1038/s41598-022-08195-z) publication and online [shiny app](https://ruisilva.shinyapps.io/rtivity/)
-- [*RhythmicAlly*](https://doi.org/10.1177/0748730419862474) publication and online [repository](https://github.com/abhilashlakshman/RhythmicAlly)
-- [*VANESSA*](https://doi.org/10.1177/07487304221077662) publication and online [repository](https://github.com/orijitghosh/VANESSA-DAM)
-
+-   [*Rtivity*](https://doi.org/10.1038/s41598-022-08195-z) publication and online [shiny app](https://ruisilva.shinyapps.io/rtivity/)
+-   [*RhythmicAlly*](https://doi.org/10.1177/0748730419862474) publication and online [repository](https://github.com/abhilashlakshman/RhythmicAlly)
+-   [*VANESSA*](https://doi.org/10.1177/07487304221077662) publication and online [repository](https://github.com/orijitghosh/VANESSA-DAM)
