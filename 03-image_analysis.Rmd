@@ -13,11 +13,11 @@ Below is a walk-through for the post-process image segmentation (i.e., blob iden
 library(data.tree)
 
 path <- c(
-    "iLAM/exp_a/ilam_01/ilam01.0707.2058.jpg",
-    "iLAM/exp_a/ilam_01/ilam01.0707.2100.jpg",
+    "iLAM/exp_a/ilam01/ilam01.0707.2058.jpg",
+    "iLAM/exp_a/ilam01/ilam01.0707.2100.jpg",
     
-    "iLAM/exp_a/ilam_02/ilam02.0707.2058.jpg",
-    "iLAM/exp_a/ilam_02/ilam02.0707.2100.jpg",
+    "iLAM/exp_a/ilam02/ilam02.0707.2058.jpg",
+    "iLAM/exp_a/ilam02/ilam02.0707.2100.jpg",
     
     "iLAM/exp_a/scripts/analyze_experiment.R",
     "iLAM/exp_a/scripts/exp_a_ilam01.R",
@@ -29,10 +29,11 @@ path <- c(
     "iLAM/exp_a/metadata_exp_a.csv",
     "iLAM/exp_a/iLAM_exp_a.txt",
     
-    "iLAM/exp_b/ilam_01/",
-    "iLAM/exp_b/ilam_02/",
+    "iLAM/exp_b/ilam01/",
+    "iLAM/exp_b/ilam02/",
     "iLAM/exp_b/scripts/",
     
+    "iLAM/scripts/add_columns_to_42.R",
     "iLAM/scripts/find_movements.R",
     "iLAM/scripts/find_threshold.R", 
     "iLAM/scripts/make_dam_file.R", 
@@ -53,7 +54,9 @@ devtools::install_github("daytonjn/iLAMtools", force=TRUE)
 library(iLAMtools)
 ```
 
-Alternatively, you may download iLAM functions from this zip folder: `r {xfun::embed_dir("./ilam_scripts/", text='iLAM wrapper functions')}` and reference them with 'source()'
+Alternatively, you can download iLAM functions from this zip folder: `r {xfun::embed_dir("./ilam_scripts/", text='iLAM wrapper functions')}` and reference them with 'source()'.
+
+To verify installation, a set of sample images and script can be downloaded from this zip folder (198MB): `r {xfun::embed_dir("./ilam_test/", text='iLAM test workflow')}`.
 
 **2. Perform image segmentation to identify movements across images taken by each iLAM (exp_a_ilam01.R, exp_a_ilam02.R, etc.)**
 
@@ -173,11 +176,12 @@ if (file.exists(paste0(out_file_name,".csv"))){
 rm(out)
 ```
 
--   Use `plot_movements()` to visualize movements by plotting detected blobs onto a subset of images
+-   Use `plot_movements()` to visualize movements by plotting detected blobs onto a subset of images. These images are helpful for tuning parameters.
 
 ```         
-#circles in bottom left corner denote standards of sizes: 12.8k px, 3.2k px, 800 px, 200 px, 50 px
-plot_movements(file_names,pi_sub_folder,
+#circles in bottom left corner denote standards of sizes: 12800 px, 3200 px, 800 px, 200 px, 50 px
+plot_movements(file_names,
+               pi_sub_folder,
                by_change,
                x_left, x_right,
                y_bot, y_top,
@@ -203,6 +207,6 @@ knitr::include_graphics("images/ilam_photinus.gif")
 
 **Tips:**
 
--   First test parameters settings for `find_movements()` with a subset of experimental images: e.g., `find_movements(files = file_names[1:100], p_sample=0.9)`
+-   First test parameters settings for `find_movements()` with a subset of experimental images: e.g., `find_movements(files = file_names[1:1000], p_sample=0.10)`
 -   If `find_movements()` crashes, returns excess small blobs/movements, and/or returns excess blobs/movements that do **NOT** correspond to REAL movements, then increase the *n_thr* or *p_sample* values. If this issue continues, then remove any days at the experiment end where all/most insects have died; this can downwardly bias the average number of pixel differences expected across images.
 -   If `find_movements()` returns many small blobs/animal and you desire one blob/animal movement, then increase *n_cln* and/or *n_grw*
