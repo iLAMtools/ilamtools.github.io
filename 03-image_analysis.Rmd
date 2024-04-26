@@ -56,11 +56,11 @@ library(iLAMtools)
 
 Alternatively, you can download iLAM functions from this zip folder: `r {xfun::embed_dir("./ilam_scripts/", text='iLAM wrapper functions')}` and reference them with 'source()'.
 
-To verify installation, a set of sample images and script can be downloaded from this zip folder (198MB): `r {xfun::embed_dir("./ilam_test/", text='iLAM test workflow')}`.
+To verify installation, a zip folder containing a set of sample images and test script can be downloaded here (198MB): [iLAM_test folder](https://tufts.box.com/s/7vtxq29krxm23v8g60r8c2evb05qy19o)
 
 **2. Perform image segmentation to identify movements across images taken by each iLAM (exp_a_ilam01.R, exp_a_ilam02.R, etc.)**
 
-```{r bb, fig.cap='Image segmentation workflow', echo=FALSE, fig.show='hold',fig.align='left'}
+```{r bb, fig.cap='Image segmentation workflow', echo=FALSE,quiet=TRUE, warning=FALSE, fig.show='hold',fig.align='left'}
 knitr::include_graphics("images/segmentation_workflow.png")
 ```
 
