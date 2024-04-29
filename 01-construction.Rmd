@@ -39,4 +39,5 @@ knitr::include_graphics("images/ilam_interior.jpg")
 -   Depending on the color that the study insect appears under infrared light (i.e., white vs. black appearance), change the background of the lid to maximize contrast
 -   To minimize differences in the photographed light environment throughout light:dark/dark:light transitions, we now:
     -   Cover the Raspberry Pi's light sensors with black duct tape or plastic; this "tricks" the Pi to keep it's infrared lights on 24/7
-    -   Cover the Raspberry Pi's camera lens with a [narrow longpass filter](https://www.edmundoptics.com/p/780nm-127mm-dia-colored-glass-replacement-longpass-filter/43186/) that only permits infrared light to the camera
+    -   Cover the Raspberry Pi's camera lens with a [longpass filter](https://www.edmundoptics.com/p/780nm-127mm-dia-colored-glass-replacement-longpass-filter/43186/) that only permits infrared light to the camera
+    -   Optional add-ons: Realtime clock (RTC) module
