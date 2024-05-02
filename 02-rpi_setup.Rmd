@@ -16,7 +16,7 @@ Steps to program the Raspberry Pi Zero computers to capture and store images:
 
 **2. Install operating system:**
 
-```{r aa, fig.cap='Raspberry Pi Imager', echo=FALSE, fig.show='hold',fig.align='left'}
+```{r aa, fig.cap='Raspberry Pi Imager', echo=FALSE, fig.show='hold',fig.align='center'}
 knitr::include_graphics("images/raspberry_pi_imager.png")
 ```
 
