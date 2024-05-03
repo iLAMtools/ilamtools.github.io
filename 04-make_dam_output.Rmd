@@ -15,7 +15,7 @@ by_change_Pg <- parse_movements(file_mvmnts = paste0(out_file_name,".csv"),
                              end_photophase = end_photophase)
 ```
 
-```{r q, fig.cap='iLAM by_change output', echo=FALSE, message=FALSE}
+```{r q, fig.cap='iLAM by_change output', echo=FALSE, message=FALSE, quiet=TRUE, warning=FALSE}
 library(knitr)
 library(readr)
 
