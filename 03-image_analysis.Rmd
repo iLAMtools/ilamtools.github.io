@@ -46,17 +46,17 @@ mytree <- data.tree::as.Node(data.frame(pathString = path))
 print(mytree)
 ```
 
-**2. Install** [iLAMtools](https://github.com/daytonjn/iLAMtools) **from GitHub**
+**2. Install** [iLAMtools](https://github.com/iLAMtools/iLAMtools) **from GitHub**
 
 ``` r
 library(devtools)
-devtools::install_github("daytonjn/iLAMtools", force=TRUE)
+devtools::install_github("iLAMtools/iLAMtools", force=TRUE)
 library(iLAMtools)
 ```
 
 Alternatively, you can download iLAM functions from this zip folder: `r {xfun::embed_dir("./ilam_scripts/", text='iLAM wrapper functions')}` and reference them with 'source()'.
 
-To verify installation, a zip folder containing a set of sample images and test script can be downloaded here (198MB): [iLAM_test folder](https://tufts.box.com/s/7vtxq29krxm23v8g60r8c2evb05qy19o)
+To verify installation, a zip folder containing a set of sample images and test script can be downloaded here (198MB): [iLAM_test folder](https://tufts.box.com/s/b8apnmu16l6bvmwf05cw4ivvmdar3695)
 
 **2. Perform image segmentation to identify movements across images taken by each iLAM (exp_a_ilam01.R, exp_a_ilam02.R, etc.)**
 

@@ -297,26 +297,26 @@ by_change_Pg &lt;- parse_movements(file_mvmnts = paste0(out_file_name,&quot;.csv
 <li>For example, across a 7-day experiment (5040 images), only 0.4% image comparisons were assigned an arbitrary value.</li>
 </ul></li>
 </ul>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="make-dam-output.html#cb22-1" tabindex="-1"></a><span class="fu">library</span>(zoo)</span>
-<span id="cb22-2"><a href="make-dam-output.html#cb22-2" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="make-dam-output.html#cb22-3" tabindex="-1"></a>by_frame_Pg <span class="ot">&lt;-</span></span>
-<span id="cb22-4"><a href="make-dam-output.html#cb22-4" tabindex="-1"></a>  by_frame_Pg <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb22-5"><a href="make-dam-output.html#cb22-5" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">s =</span> <span class="fu">replace</span>(s, s<span class="sc">==</span><span class="dv">2000000</span>, <span class="cn">NA</span>),</span>
-<span id="cb22-6"><a href="make-dam-output.html#cb22-6" tabindex="-1"></a>          <span class="at">n =</span> <span class="fu">replace</span>(n, <span class="fu">is.na</span>(s), <span class="cn">NA</span>))</span>
-<span id="cb22-7"><a href="make-dam-output.html#cb22-7" tabindex="-1"></a></span>
-<span id="cb22-8"><a href="make-dam-output.html#cb22-8" tabindex="-1"></a>by_frame_Pg <span class="ot">&lt;-</span></span>
-<span id="cb22-9"><a href="make-dam-output.html#cb22-9" tabindex="-1"></a>  by_frame_Pg <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(pi) <span class="sc">%&gt;%</span></span>
-<span id="cb22-10"><a href="make-dam-output.html#cb22-10" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">s =</span> <span class="fu">round</span>((<span class="fu">na.locf0</span>(s, <span class="at">fromLast =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">na.locf0</span>(s, <span class="at">fromLast =</span> <span class="cn">FALSE</span>))<span class="sc">/</span><span class="dv">2</span>,<span class="dv">0</span>),</span>
-<span id="cb22-11"><a href="make-dam-output.html#cb22-11" tabindex="-1"></a>         <span class="at">n =</span> <span class="fu">round</span>((<span class="fu">na.locf0</span>(n, <span class="at">fromLast =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">na.locf0</span>(n, <span class="at">fromLast =</span> <span class="cn">FALSE</span>))<span class="sc">/</span><span class="dv">2</span>,<span class="dv">0</span>)) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>()</span>
-<span id="cb22-12"><a href="make-dam-output.html#cb22-12" tabindex="-1"></a></span>
-<span id="cb22-13"><a href="make-dam-output.html#cb22-13" tabindex="-1"></a>by_frame_Pg <span class="ot">&lt;-</span></span>
-<span id="cb22-14"><a href="make-dam-output.html#cb22-14" tabindex="-1"></a>  by_frame_Pg <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb22-15"><a href="make-dam-output.html#cb22-15" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">s =</span> <span class="fu">replace</span>(s, <span class="fu">is.na</span>(s), <span class="dv">0</span>),</span>
-<span id="cb22-16"><a href="make-dam-output.html#cb22-16" tabindex="-1"></a>          <span class="at">n =</span> <span class="fu">replace</span>(n, <span class="fu">is.na</span>(n), <span class="dv">0</span>))</span>
-<span id="cb22-17"><a href="make-dam-output.html#cb22-17" tabindex="-1"></a></span>
-<span id="cb22-18"><a href="make-dam-output.html#cb22-18" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">filter</span>(by_frame_Pg, n<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(pi) <span class="sc">%&gt;%</span></span>
-<span id="cb22-19"><a href="make-dam-output.html#cb22-19" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">blob_size =</span> <span class="fu">mean</span>((s<span class="sc">/</span>n), <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="co">#output the average blob size</span></span>
-<span id="cb22-20"><a href="make-dam-output.html#cb22-20" tabindex="-1"></a>  </span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="make-dam-output.html#cb23-1" tabindex="-1"></a><span class="fu">library</span>(zoo)</span>
+<span id="cb23-2"><a href="make-dam-output.html#cb23-2" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="make-dam-output.html#cb23-3" tabindex="-1"></a>by_frame_Pg <span class="ot">&lt;-</span></span>
+<span id="cb23-4"><a href="make-dam-output.html#cb23-4" tabindex="-1"></a>  by_frame_Pg <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb23-5"><a href="make-dam-output.html#cb23-5" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">s =</span> <span class="fu">replace</span>(s, s<span class="sc">==</span><span class="dv">2000000</span>, <span class="cn">NA</span>),</span>
+<span id="cb23-6"><a href="make-dam-output.html#cb23-6" tabindex="-1"></a>          <span class="at">n =</span> <span class="fu">replace</span>(n, <span class="fu">is.na</span>(s), <span class="cn">NA</span>))</span>
+<span id="cb23-7"><a href="make-dam-output.html#cb23-7" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="make-dam-output.html#cb23-8" tabindex="-1"></a>by_frame_Pg <span class="ot">&lt;-</span></span>
+<span id="cb23-9"><a href="make-dam-output.html#cb23-9" tabindex="-1"></a>  by_frame_Pg <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(pi) <span class="sc">%&gt;%</span></span>
+<span id="cb23-10"><a href="make-dam-output.html#cb23-10" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">s =</span> <span class="fu">round</span>((<span class="fu">na.locf0</span>(s, <span class="at">fromLast =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">na.locf0</span>(s, <span class="at">fromLast =</span> <span class="cn">FALSE</span>))<span class="sc">/</span><span class="dv">2</span>,<span class="dv">0</span>),</span>
+<span id="cb23-11"><a href="make-dam-output.html#cb23-11" tabindex="-1"></a>         <span class="at">n =</span> <span class="fu">round</span>((<span class="fu">na.locf0</span>(n, <span class="at">fromLast =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">na.locf0</span>(n, <span class="at">fromLast =</span> <span class="cn">FALSE</span>))<span class="sc">/</span><span class="dv">2</span>,<span class="dv">0</span>)) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>()</span>
+<span id="cb23-12"><a href="make-dam-output.html#cb23-12" tabindex="-1"></a></span>
+<span id="cb23-13"><a href="make-dam-output.html#cb23-13" tabindex="-1"></a>by_frame_Pg <span class="ot">&lt;-</span></span>
+<span id="cb23-14"><a href="make-dam-output.html#cb23-14" tabindex="-1"></a>  by_frame_Pg <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb23-15"><a href="make-dam-output.html#cb23-15" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">s =</span> <span class="fu">replace</span>(s, <span class="fu">is.na</span>(s), <span class="dv">0</span>),</span>
+<span id="cb23-16"><a href="make-dam-output.html#cb23-16" tabindex="-1"></a>          <span class="at">n =</span> <span class="fu">replace</span>(n, <span class="fu">is.na</span>(n), <span class="dv">0</span>))</span>
+<span id="cb23-17"><a href="make-dam-output.html#cb23-17" tabindex="-1"></a></span>
+<span id="cb23-18"><a href="make-dam-output.html#cb23-18" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">filter</span>(by_frame_Pg, n<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(pi) <span class="sc">%&gt;%</span></span>
+<span id="cb23-19"><a href="make-dam-output.html#cb23-19" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">blob_size =</span> <span class="fu">mean</span>((s<span class="sc">/</span>n), <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="co">#output the average blob size</span></span>
+<span id="cb23-20"><a href="make-dam-output.html#cb23-20" tabindex="-1"></a>  </span></code></pre></div>
 <table>
 <caption><span id="tab:o">Table 5.2: </span>iLAM by_frame data frame</caption>
 <colgroup>

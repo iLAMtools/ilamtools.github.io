@@ -1,31 +1,27 @@
 #Script to process sample data and verify proper installation of iLAMtools functions
-
 library(devtools)
-devtools::install_github("daytonjn/iLAMtools", force=TRUE)
+devtools::install_github("iLAMtools/iLAMtools", force=TRUE)
 library(iLAMtools)
 
-#Load required packages
-library(dplyr)
-library(imager)
-library(lubridate)
-library(magrittr)
-library(readr)
-library(reshape2)
-library(stringr)
-library(tibble)
-library(tidyr)
-library(plotrix)
-
-#Alternatively: Download zipped folder containing iLAMtools functions from https://daytonjn.github.io/ilam/post-process-image-segmentation.html 
+#Alternatively: Download a zipped folder containing iLAMtools functions from https://ilamtools.github.io/ilam/post-process-image-segmentation.html 
 #Save these files in a "scripts" folder that is accessible from the current project directory
-#Read in these functions via:
-
+#Source  these functions via:
 # for (f in list.files("./scripts", pattern="*.R",
 #                      full.names = TRUE)) {
 #   source(f)
 # }
+# library(dplyr)
+# library(imager)
+# library(lubridate)
+# library(magrittr)
+# library(readr)
+# library(reshape2)
+# library(stringr)
+# library(tibble)
+# library(tidyr)
+# library(plotrix)
 
-
+#Download image files from link provided at https://ilamtools.github.io/post-process-image-segmentation.html
 
 ###
 #change following values for every cage
