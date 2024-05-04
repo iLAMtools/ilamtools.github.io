@@ -18,7 +18,13 @@ To fill this gap, we developed the affordable, **imaging Locomotor Activity Moni
 
 Customizable, modular R-scripts process consecutive images with [*imager*](https://cran.r-project.org/web/packages/imager/) and output a file containing the *number*, *size*, *location*, and *timing* of all identified movements. Movement data can be converted into DAM format or directly analyzed within the [*Rethomics*](https://rethomics.github.io/) framework.
 
-Out-of-the-box functions can be downloaded and installed from our [iLAMtools](https://github.com/daytonjn/iLAMtools) repository.
+Out-of-the-box functions can be downloaded and installed from our iLAMtools R package by:
+
+``` r
+library(devtools)
+devtools::install_github("daytonjn/iLAMtools", force=TRUE)
+library(iLAMtools)
+```
 
 ```{r x, fig.cap='iLAM Workflow', echo=FALSE, fig.show='hold',fig.align='center'}
 knitr::include_graphics("images/ilam_workflow.png", error=FALSE)

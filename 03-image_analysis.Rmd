@@ -46,7 +46,7 @@ mytree <- data.tree::as.Node(data.frame(pathString = path))
 print(mytree)
 ```
 
-**2. Install** [iLAMtools](https://github.com/daytonjn/iLAMtools) **from GitHub**
+**2. Install** [iLAMtools](https://github.com/iLAMtools/iLAMtools) **from GitHub**
 
 ``` r
 library(devtools)

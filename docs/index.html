@@ -23,7 +23,7 @@
 <meta name="author" content="" />
 
 
-<meta name="date" content="2024-04-25" />
+<meta name="date" content="2024-05-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,7 +56,7 @@
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -169,14 +169,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">iLAM: imaging Locomotor Activity Monitor</h1>
 <p class="author"><em></em></p>
-<p class="date"><em>2024-04-25</em></p>
+<p class="date"><em>2024-05-04</em></p>
 </div>
 <div id="description" class="section level1 hasAnchor" number="1">
 <h1><span class="header-section-number">1</span> Description<a href="index.html#description" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>Historically, most insect chronoecological research has used direct observations, cameras, and/or infrared beam-based monitors to quantify movement across timed intervals. Although many systems are cheaper than the traditional infrared locomotor activity monitors (e.g., DAM/LAM), these options can remain complicated to build, computationally intensive to setup/process, and/or unable to accommodate large-bodied insects (i.e., not <em>Drosophila</em>).</p>
 <p>To fill this gap, we developed the affordable, <strong>imaging Locomotor Activity Monitor (iLAM)</strong> for activity quantification. The iLAM utilizes a <a href="https://www.raspberrypi.com/products/raspberry-pi-zero-w/">Raspberry Pi Zero W</a> computer and night-vision camera inside a flight cage to regularly photograph a population of insects at user-defined intervals.</p>
 <p>Customizable, modular R-scripts process consecutive images with <a href="https://cran.r-project.org/web/packages/imager/"><em>imager</em></a> and output a file containing the <em>number</em>, <em>size</em>, <em>location</em>, and <em>timing</em> of all identified movements. Movement data can be converted into DAM format or directly analyzed within the <a href="https://rethomics.github.io/"><em>Rethomics</em></a> framework.</p>
-<p>Out-of-the-box functions can be downloaded and installed from our <a href="https://github.com/daytonjn/iLAMtools">iLAMtools</a> repository.</p>
+<p>Out-of-the-box functions can be downloaded and installed from our iLAMtools R package by:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="index.html#cb1-1" tabindex="-1"></a><span class="fu">library</span>(devtools)</span>
+<span id="cb1-2"><a href="index.html#cb1-2" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;daytonjn/iLAMtools&quot;</span>, <span class="at">force=</span><span class="cn">TRUE</span>)</span>
+<span id="cb1-3"><a href="index.html#cb1-3" tabindex="-1"></a><span class="fu">library</span>(iLAMtools)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:x"></span>
 <img src="images/ilam_workflow.png" alt="iLAM Workflow" width="301" />
 <p class="caption">
