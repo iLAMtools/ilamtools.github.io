@@ -6,7 +6,7 @@ site: bookdown::bookdown_site
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
-github-repo: ilam/daytonjn.github.io/
+github-repo: iLAMtools.github.io/
 description: "This is the documentation for the iLAM project, a monitor to quantify diel and circadian insect activity"
 ---
 
@@ -18,7 +18,17 @@ To fill this gap, we developed the affordable, **imaging Locomotor Activity Moni
 
 Customizable, modular R-scripts process consecutive images with [*imager*](https://cran.r-project.org/web/packages/imager/) and output a file containing the *number*, *size*, *location*, and *timing* of all identified movements. Movement data can be converted into DAM format or directly analyzed within the [*Rethomics*](https://rethomics.github.io/) framework.
 
+<<<<<<< Updated upstream
 Out-of-the-box functions can be downloaded and installed from our [iLAMtools](https://github.com/daytonjn/iLAMtools) repository.
+=======
+Out-of-the-box functions can be downloaded and installed from our iLAMtools R package by:
+
+``` r
+library(devtools)
+devtools::install_github("iLAMtools/iLAMtools", force=TRUE)
+library(iLAMtools)
+```
+>>>>>>> Stashed changes
 
 ```{r x, fig.cap='iLAM Workflow', echo=FALSE, fig.show='hold',fig.align='center'}
 knitr::include_graphics("images/ilam_workflow.png", error=FALSE)
